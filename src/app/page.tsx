@@ -2,6 +2,7 @@ import Link from "next/link"
 import { SportCard } from "@/components/sport-card"
 import { Button } from "@/components/ui/button"
 import { MapPin, Calendar, Users } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 
 // Sample sports data with updated color scheme
 const SPORTS = [
@@ -135,6 +136,13 @@ export default function Home() {
                 <SportCard sport={sport} />
               </Link>
             ))}
+          </div>
+          {/* More Sports Link */}
+          <div className="mt-8 flex justify-end">
+            <Link href="/all-sports" className="text-primary flex items-center hover:underline">
+              More Sports
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>

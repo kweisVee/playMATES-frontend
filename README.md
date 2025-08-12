@@ -46,6 +46,19 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 `npx shadcn@latest add card`
 `npx shadcn@latest add button`
 `npm install next-themes`
+`npx shadcn@latest add dialog`
+`npx shadcn@latest add input`
+`npx shadcn@latest add label`
+`npx shadcn@latest add checkbox`
+
 
 ## Install tailwindcss-animate
 `npm install tailwindcss-animate`
+
+
+## Creating an api call 
+1. URL can be found in `src/lib/config/api.ts` where you add your API endpoint
+2. Create the interface and call in `src/lib/services/user.ts`
+3. Call the service in `src/hooks/useUser.ts`
+4. Add the hooks to `src/components/auth-modal.tsx`
+
