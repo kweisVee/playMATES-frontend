@@ -1,8 +1,25 @@
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { UserCircle } from "lucide-react"
+import { useState } from "react"
+import { AuthModal } from "@/components/auth-modal"
 
 export function Navbar() {
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [authMode, setAuthMode] = useState<"signin" | "signup">("signin")
+
+  const openSignIn = () => {
+    setAuthMode("signin")
+    setShowAuthModal(true)
+  }
+
+  const openSignUp = () => {
+    setAuthMode("signup")
+    setShowAuthModal(true)
+  }
+  
   return (
     <header className="border-b">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -15,7 +32,7 @@ export function Navbar() {
           <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">
             Home
           </Link>
-          <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
+          <Link href="/all-sports" className="text-sm font-medium hover:text-primary transition-colors">
             Browse Sports
           </Link>
           <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
@@ -26,13 +43,23 @@ export function Navbar() {
           </Link>
         </nav>
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" className="hidden md:flex items-center gap-2">
+          <Button variant="outline" size="sm" className="hidden md:flex items-center gap-2" onClick={openSignIn}>
             <UserCircle className="h-4 w-4" />
             Sign In
           </Button>
-          <Button size="sm">Get Started</Button>
+          <Button size="sm" onClick={openSignUp}>
+            Sign Up
+          </Button>
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        mode={authMode}
+        onToggleMode={() => setAuthMode(authMode === "signin" ? "signup" : "signin")}
+      />
     </header>
   )
 }
