@@ -1,5 +1,16 @@
 import { API_BASE_URL, API_ENDPOINTS, getDefaultHeaders } from "@/lib/config/api"
 
+
+export interface User {
+  id: string
+  email: string
+  firstName: string
+  lastName: string
+  city: string
+  state: string
+  country: string
+}
+
 // TypeScript interface for signup data
 export interface SignUpData {
   firstName: string
@@ -20,6 +31,8 @@ export interface SignInData {
 // Service class for user API calls
 export class UserService {
   static async signUp(data: SignUpData) {
+    console.log("user.ts: UserService: Sign up starting...");
+    console.log("api call: ", `${API_BASE_URL}${API_ENDPOINTS.AUTH.SIGNUP}`);
     const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.AUTH.SIGNUP}`, {
       method: "POST",
       headers: getDefaultHeaders(),
@@ -35,6 +48,7 @@ export class UserService {
   }
 
   static async signIn(data: SignInData) {
+    console.log("user.ts: UserService: Sign in starting...");
     const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.AUTH.SIGNIN}`, {
       method: "POST",
       headers: getDefaultHeaders(),

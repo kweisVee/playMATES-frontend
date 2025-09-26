@@ -5,11 +5,17 @@ import { Button } from "@/components/ui/button"
 import { UserCircle } from "lucide-react"
 import { useState } from "react"
 import { AuthModal } from "@/components/auth-modal"
+import { useAuthContext } from "@/contexts/AuthContext"
+import { useUser } from "@/hooks/useUser"
 
 export function Navbar() {
+  const { isAuthenticated, user } = useAuthContext()
+  const { signOut } = useUser()
+
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin")
 
+  
   const openSignIn = () => {
     setAuthMode("signin")
     setShowAuthModal(true)
@@ -19,7 +25,11 @@ export function Navbar() {
     setAuthMode("signup")
     setShowAuthModal(true)
   }
-  
+
+  const handleLogout = async () => {
+    await signOut()
+  } 
+
   return (
     <header className="border-b">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -43,13 +53,27 @@ export function Navbar() {
           </Link>
         </nav>
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" className="hidden md:flex items-center gap-2" onClick={openSignIn}>
-            <UserCircle className="h-4 w-4" />
-            Sign In
-          </Button>
-          <Button size="sm" onClick={openSignUp}>
-            Sign Up
-          </Button>
+          { isAuthenticated ? (
+            // User is signed in
+            <>
+              <span className="text-sm">
+                Hello, {user?.firstName}
+              </span>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
+                Logout
+              </Button>
+            </>
+          ):(
+            <>
+              <Button variant="outline" size="sm" className="hidden md:flex items-center gap-2" onClick={openSignIn}>
+                <UserCircle className="h-4 w-4" />
+                Sign In
+              </Button>
+              <Button size="sm" onClick={openSignUp}>
+                Sign Up
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
