@@ -9,7 +9,14 @@ export const API_ENDPOINTS = {
   },
 } as const
 
-// Common headers
 export const getDefaultHeaders = () => ({
   "Content-Type": "application/json",
 })
+
+export const getAuthHeaders = () => {
+  const token = localStorage.getItem("token")
+  return {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  }
+}
