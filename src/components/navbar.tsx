@@ -9,7 +9,7 @@ import { useAuthContext } from "@/contexts/AuthContext"
 import { useUser } from "@/hooks/useUser"
 
 export function Navbar() {
-  const { isAuthenticated, user } = useAuthContext()
+  const { isAuthenticated, user, isLoading } = useAuthContext()
   const { signOut } = useUser()
 
   const [showAuthModal, setShowAuthModal] = useState(false)
@@ -53,8 +53,9 @@ export function Navbar() {
           </Link>
         </nav>
         <div className="flex items-center gap-3">
-          { isAuthenticated ? (
-            // User is signed in
+        {isLoading ? (
+            <div className="text-sm text-gray-500">Loading...</div>
+          ) : isAuthenticated ? (
             <>
               <span className="text-sm">
                 Hello, {user?.firstName}
@@ -63,7 +64,7 @@ export function Navbar() {
                 Logout
               </Button>
             </>
-          ):(
+          ) : (
             <>
               <Button variant="outline" size="sm" className="hidden md:flex items-center gap-2" onClick={openSignIn}>
                 <UserCircle className="h-4 w-4" />

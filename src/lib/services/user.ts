@@ -1,4 +1,8 @@
-import { API_BASE_URL, API_ENDPOINTS, getDefaultHeaders } from "@/lib/config/api"
+import { API_BASE_URL, 
+        API_ENDPOINTS, 
+        getDefaultHeaders, 
+        getAuthHeaders
+  } from "@/lib/config/api"
 
 
 export interface User {
@@ -61,5 +65,21 @@ export class UserService {
     }
 
     return response.json()
+  }
+
+  static async getProfile() {
+    console.log("user.ts: UserService: Get Profile starting...");
+    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.AUTH.GET_PROFILE}`, {
+      method: "GET", 
+      headers: getAuthHeaders(),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || "Get Profile failed");
+    }
+
+    return response.json()
+
   }
 } 
