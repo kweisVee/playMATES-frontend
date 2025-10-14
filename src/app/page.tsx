@@ -70,7 +70,7 @@ export default function Home() {
       {/* Hero Section with vibrant gradient background */}
       <section className="bg-gradient-to-b from-primary/20 to-white py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
             Find Your Perfect <span className="text-primary">PlayMate</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
@@ -90,7 +90,7 @@ export default function Home() {
       {/* Features Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Why Choose PlayMate?</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-dark-light">Why Choose PlayMate?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 bg-primary/15 rounded-full flex items-center justify-center mb-4">
@@ -148,7 +148,7 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">How PlayMate Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

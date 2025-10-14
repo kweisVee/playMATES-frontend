@@ -7,6 +7,7 @@ import { useState } from "react"
 import { AuthModal } from "@/components/auth-modal"
 import { useAuthContext } from "@/contexts/AuthContext"
 import { useUser } from "@/hooks/useUser"
+import { ThemeToggle } from "./theme-toggle"
 
 export function Navbar() {
   const { isAuthenticated, user, isLoading } = useAuthContext()
@@ -53,6 +54,7 @@ export function Navbar() {
           </Link>
         </nav>
         <div className="flex items-center gap-3">
+        <ThemeToggle />
         {isLoading ? (
             <div className="text-sm text-gray-500">Loading...</div>
           ) : isAuthenticated ? (
