@@ -82,6 +82,18 @@
 .bg-card { background-color: hsl(var(--card)); }
 .text-card-foreground { color: hsl(var(--card-foreground)); }
 
+.text-dark-light {
+  color: hsl(var(--foreground));
+}
+
+.text-dark-primary {
+  color: hsl(var(--primary));
+}
+
+.text-dark-muted {
+  color: hsl(var(--muted-foreground));
+}
+
 /* Gradient utilities */
 .bg-gradient-to-b {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));

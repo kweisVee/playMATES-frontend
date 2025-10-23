@@ -12,12 +12,14 @@ export const API_ENDPOINTS = {
 
 export const getDefaultHeaders = () => ({
   "Content-Type": "application/json",
+  // "api-version": "v1", // Temporarily commented out due to CORS
 })
 
 export const getAuthHeaders = () => {
   const token = localStorage.getItem("token")
   return {
     "Content-Type": "application/json",
+    // "api-version": "v1", // Temporarily commented out due to CORS
     ...(token && { Authorization: `Bearer ${token}` }),
   }
 }
