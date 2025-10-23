@@ -36,10 +36,15 @@ export interface SignInData {
 export class UserService {
   static async signUp(data: SignUpData) {
     console.log("user.ts: UserService: Sign up starting...");
-    console.log("api call: ", `${API_BASE_URL}${API_ENDPOINTS.AUTH.SIGNUP}`);
-    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.AUTH.SIGNUP}`, {
+    const url = `${API_BASE_URL}${API_ENDPOINTS.AUTH.SIGNUP}`;
+    const headers = getDefaultHeaders();
+    console.log("API call URL:", url);
+    console.log("Headers being sent:", headers);
+    console.log("Request body:", JSON.stringify(data));
+    
+    const response = await fetch(url, {
       method: "POST",
-      headers: getDefaultHeaders(),
+      headers: headers,
       body: JSON.stringify(data),
     })
 
@@ -53,9 +58,15 @@ export class UserService {
 
   static async signIn(data: SignInData) {
     console.log("user.ts: UserService: Sign in starting...");
-    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.AUTH.SIGNIN}`, {
+    const url = `${API_BASE_URL}${API_ENDPOINTS.AUTH.SIGNIN}`;
+    const headers = getDefaultHeaders();
+    console.log("API call URL:", url);
+    console.log("Headers being sent:", headers);
+    console.log("Request body:", JSON.stringify(data));
+    
+    const response = await fetch(url, {
       method: "POST",
-      headers: getDefaultHeaders(),
+      headers: headers,
       body: JSON.stringify(data),
     })
 
@@ -69,9 +80,14 @@ export class UserService {
 
   static async getProfile() {
     console.log("user.ts: UserService: Get Profile starting...");
-    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.AUTH.GET_PROFILE}`, {
+    const url = `${API_BASE_URL}${API_ENDPOINTS.AUTH.GET_PROFILE}`;
+    const headers = getAuthHeaders();
+    console.log("API call URL:", url);
+    console.log("Headers being sent:", headers);
+    
+    const response = await fetch(url, {
       method: "GET", 
-      headers: getAuthHeaders(),
+      headers: headers,
     })
 
     if (!response.ok) {
@@ -80,6 +96,5 @@ export class UserService {
     }
 
     return response.json()
-
   }
 } 
