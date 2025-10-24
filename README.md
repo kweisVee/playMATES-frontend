@@ -62,3 +62,19 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 3. Call the service in `src/hooks/useUser.ts`
 4. Add the hooks to `src/components/auth-modal.tsx`
 
+## Cookie Parser
+`npm install cookie-parser @types/cookie-parser`
+### Using Cookies: 
+Take note that `credentials: include` both sends and receives cookies
+```
+User clicks "Sign In" button with email & password
+fetch('http://localhost:3001/api/user/signin', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'include',  //This is KEY! Tells browser to send/receive cookies
+  body: JSON.stringify({ email, password })
+})
+```
+
+## Errors found
+- I had to pass a version header, to determine which version of the api I want to call and I get an error which says `Access to fetch at 'http://localhost:3001/api/user/signin' from origin 'http://localhost:3000' has been blocked by CORS policy: Request header field api-version is not allowed by Access-Control-Allow-Headers in preflight response.` and this is because we have to update the backend server to allow the api-version header. 

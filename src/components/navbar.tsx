@@ -40,18 +40,37 @@ export function Navbar() {
           </span>
         </Link>
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">
-            Home
-          </Link>
-          <Link href="/all-sports" className="text-sm font-medium hover:text-primary transition-colors">
-            Browse Sports
-          </Link>
-          <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
-            How It Works
-          </Link>
-          <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
-            About
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link href="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">
+                Dashboard
+              </Link>
+              <Link href="/browse" className="text-sm font-medium hover:text-primary transition-colors">
+                Browse Meetups
+              </Link>
+              <Link href="/my-meetups" className="text-sm font-medium hover:text-primary transition-colors">
+                My Meetups
+              </Link>
+              <Link href="/create-meetup" className="text-sm font-medium hover:text-primary transition-colors">
+                Create Meetup
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">
+                Home
+              </Link>
+              <Link href="/all-sports" className="text-sm font-medium hover:text-primary transition-colors">
+                Browse Sports
+              </Link>
+              <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
+                How It Works
+              </Link>
+              <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
+                About
+              </Link>
+            </>
+          )}
         </nav>
         <div className="flex items-center gap-3">
         <ThemeToggle />
@@ -59,9 +78,14 @@ export function Navbar() {
             <div className="text-sm text-gray-500">Loading...</div>
           ) : isAuthenticated ? (
             <>
-              <span className="text-sm">
-                Hello, {user?.firstName}
-              </span>
+              <Link 
+                href="/profile" 
+                className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10 transition-colors cursor-pointer"
+                onClick={() => console.log("Username clicked! Navigating to /profile...")}
+              >
+                <UserCircle className="h-4 w-4" />
+                <span className="hidden lg:inline text-sm font-medium">{user?.firstName}</span>
+              </Link>
               <Button variant="outline" size="sm" onClick={handleLogout}>
                 Logout
               </Button>

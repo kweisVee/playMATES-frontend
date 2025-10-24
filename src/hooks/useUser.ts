@@ -37,8 +37,12 @@ export function useUser() {
 
     try {
       const response = await UserService.signIn(data)
-      localStorage.setItem("token", response.token)
-
+      
+      // IMPORTANT: With httpOnly cookies, the backend will automatically set the cookie
+      // We don't need to store the token in localStorage anymore
+      // The backend should send: Set-Cookie: token=xyz; HttpOnly; Secure; SameSite=Strict
+      
+      // Just update the auth context with user data
       login(response.token, response.user)
       console.log("useUser.ts: Sign In successful: ", response)
 
@@ -54,6 +58,17 @@ export function useUser() {
 
   const signOut = async () => {
     console.log("useUser.ts: Sign Out starting...")
+    
+    // Call backend to clear the httpOnly cookie
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/user/signout`, {
+        method: 'POST',
+        credentials: 'include', // Important: sends cookies
+      })
+    } catch (error) {
+      console.error("Failed to sign out on backend:", error)
+    }
+    
     logout()
     console.log("useUser.ts: Sign Out successful")
   }

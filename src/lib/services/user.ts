@@ -46,6 +46,7 @@ export class UserService {
       method: "POST",
       headers: headers,
       body: JSON.stringify(data),
+      credentials: "include", // IMPORTANT: This sends and receives cookies
     })
 
     if (!response.ok) {
@@ -68,6 +69,7 @@ export class UserService {
       method: "POST",
       headers: headers,
       body: JSON.stringify(data),
+      credentials: "include", // IMPORTANT: This sends and receives cookies
     })
 
     if (!response.ok) {
@@ -88,6 +90,7 @@ export class UserService {
     const response = await fetch(url, {
       method: "GET", 
       headers: headers,
+      credentials: "include", // IMPORTANT: This sends cookies with the request
     })
 
     if (!response.ok) {

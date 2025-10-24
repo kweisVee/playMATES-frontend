@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { AtSign, Lock, User } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 interface AuthModalProps {
   isOpen: boolean
@@ -30,6 +31,7 @@ export function AuthModal({ isOpen, onClose, mode, onToggleMode }: AuthModalProp
   const [rememberMe, setRememberMe] = useState(false)
 
   const { signIn, signUp } = useUser()
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,6 +39,9 @@ export function AuthModal({ isOpen, onClose, mode, onToggleMode }: AuthModalProp
     try {
       if (mode === "signin") {
         await signIn({ email, password })
+        onClose()
+        // router.push() is a method from Next.js that allows you to programmatically navigate to different pages in your app.
+        router.push("/dashboard")
       } else {
         await signUp({
           firstName,
@@ -48,8 +53,10 @@ export function AuthModal({ isOpen, onClose, mode, onToggleMode }: AuthModalProp
           state,
           country,
         })
+        onClose()
+        // Redirect to dashboard after successful sign-up
+        router.push("/dashboard")
       }
-      onClose()
     } catch (error) {
       console.error("Auth error:", error)
     }
