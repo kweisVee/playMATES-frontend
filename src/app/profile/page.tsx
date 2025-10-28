@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
-import { UserCircle, Edit, Save, X } from "lucide-react"
+import { UserCircle, Edit, Save, X, Shield } from "lucide-react"
 import { useState } from "react"
 import { User } from "@/lib/services/user"
 
@@ -22,6 +22,7 @@ export default function ProfilePage() {
     city: user?.city || "",
     state: user?.state || "",
     country: user?.country || "",
+    role: user?.role || "USER",
   })
 
   const handleSave = async () => {
@@ -35,8 +36,8 @@ export default function ProfilePage() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          credentials: "include",
           body: JSON.stringify(formData),
         }
       )
@@ -48,10 +49,9 @@ export default function ProfilePage() {
       const updatedUser = await response.json()
       
       // Update the auth context with new user data
-      const token = localStorage.getItem("token")
-      if (token) {
-        login(token, updatedUser)
-      }
+      // Note: With cookie-based auth, we don't need to pass a token
+      // The login function will be updated to handle this
+      login("", updatedUser)
       
       setIsEditing(false)
       alert("Profile updated successfully!")
@@ -72,6 +72,7 @@ export default function ProfilePage() {
       city: user?.city || "",
       state: user?.state || "",
       country: user?.country || "",
+      role: user?.role || "USER",
     })
     setIsEditing(false)
   }
@@ -96,9 +97,17 @@ export default function ProfilePage() {
               <div className="w-32 h-32 bg-primary/20 rounded-full flex items-center justify-center mb-4">
                 <UserCircle className="w-24 h-24 text-primary" />
               </div>
-              <h2 className="text-2xl font-bold mb-1">
-                {user?.firstName} {user?.lastName}
-              </h2>
+              <div className="flex items-center gap-2 mb-1">
+                <h2 className="text-2xl font-bold">
+                  {user?.firstName} {user?.lastName}
+                </h2>
+                {user?.role === 'ADMIN' && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-amber-100 text-amber-800 border border-amber-300 rounded-full text-sm font-semibold">
+                    <Shield className="w-4 h-4" />
+                    ADMIN
+                  </span>
+                )}
+              </div>
               <p className="text-muted-foreground">{user?.email}</p>
             </div>
 
@@ -220,6 +229,33 @@ export default function ProfilePage() {
                   </div>
                 </div>
               </div>
+
+              {/* Account Role */}
+              {user?.role === 'ADMIN' && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Account Role</h3>
+                  <div>
+                    <Label htmlFor="role">User Role</Label>
+                    <select
+                      id="role"
+                      value={formData.role}
+                      onChange={(e) =>
+                        setFormData({ ...formData, role: e.target.value as 'USER' | 'ADMIN' })
+                      }
+                      disabled={!isEditing || user?.role !== 'ADMIN'}
+                      className="mt-2 w-full px-3 py-2 border border-input rounded-md bg-background disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <option value="USER">USER</option>
+                      <option value="ADMIN">ADMIN</option>
+                    </select>
+                    {user?.role === 'ADMIN' && (
+                      <p className="text-sm text-muted-foreground mt-1">
+                        As an admin, you can change user roles
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Account Stats */}
               <div className="pt-6 border-t">
