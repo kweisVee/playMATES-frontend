@@ -13,6 +13,7 @@ export interface User {
   city: string
   state: string
   country: string
+  role?: 'USER' | 'ADMIN'
 }
 
 // TypeScript interface for signup data
