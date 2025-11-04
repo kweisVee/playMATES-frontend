@@ -138,8 +138,8 @@ export class MeetupService {
     })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: "Failed to create meetup" }))
-      throw new Error(errorData.message || "Failed to create meetup")
+      const errorData = await response.json().catch(() => ({ message: "meetup.ts: MeetupService: Failed to create meetup" }))
+      throw new Error(errorData.message || "meetup.ts: MeetupService: Failed to create meetup")
     }
 
     return response.json()
@@ -162,8 +162,8 @@ export class MeetupService {
     })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: "Failed to update meetup" }))
-      throw new Error(errorData.message || "Failed to update meetup")
+      const errorData = await response.json().catch(() => ({ message: "meetup.ts: MeetupService: Failed to update meetup" }))
+      throw new Error(errorData.message || "meetup.ts: MeetupService: Failed to update meetup")
     }
 
     return response.json()
@@ -184,8 +184,8 @@ export class MeetupService {
     })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: "Failed to delete meetup" }))
-      throw new Error(errorData.message || "Failed to delete meetup")
+      const errorData = await response.json().catch(() => ({ message: "meetup.ts: MeetupService: Failed to delete meetup" }))
+      throw new Error(errorData.message || "meetup.ts: MeetupService: Failed to delete meetup")
     }
 
     return response.json()
@@ -206,8 +206,8 @@ export class MeetupService {
     })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: "Failed to join meetup" }))
-      throw new Error(errorData.message || "Failed to join meetup")
+      const errorData = await response.json().catch(() => ({ message: "meetup.ts: MeetupService: Failed to join meetup" }))
+      throw new Error(errorData.message || "meetup.ts: MeetupService: Failed to join meetup")
     }
 
     return response.json()
@@ -228,8 +228,8 @@ export class MeetupService {
     })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: "Failed to leave meetup" }))
-      throw new Error(errorData.message || "Failed to leave meetup")
+      const errorData = await response.json().catch(() => ({ message: "meetup.ts: MeetupService: Failed to leave meetup" }))
+      throw new Error(errorData.message || "meetup.ts: MeetupService: Failed to leave meetup")
     }
 
     return response.json()
@@ -250,8 +250,8 @@ export class MeetupService {
     })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: "Failed to fetch user meetups" }))
-      throw new Error(errorData.message || "Failed to fetch user meetups")
+      const errorData = await response.json().catch(() => ({ message: "meetup.ts: MeetupService: Failed to fetch user meetups" }))
+      throw new Error(errorData.message || "meetup.ts: MeetupService: Failed to fetch user meetups")
     }
 
     return response.json()

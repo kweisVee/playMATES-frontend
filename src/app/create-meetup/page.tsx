@@ -5,24 +5,39 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
-import { useState } from "react"
+import { useState, useEffect} from "react"
 import { MeetupService, CreateMeetupData } from "@/lib/services/meetup"
 import { useRouter } from "next/navigation"
+import { Sport, SportService } from "@/lib/services/sport"
 
-const SPORTS = [
-  { id: "tennis", name: "Tennis", icon: "🎾", color: "bg-green-100" },
-  { id: "basketball", name: "Basketball", icon: "🏀", color: "bg-orange-100" },
-  { id: "soccer", name: "Soccer", icon: "⚽", color: "bg-blue-100" },
-  { id: "volleyball", name: "Volleyball", icon: "🏐", color: "bg-yellow-100" },
-  { id: "badminton", name: "Badminton", icon: "🏸", color: "bg-purple-100" },
-  { id: "running", name: "Running", icon: "🏃", color: "bg-red-100" },
-  { id: "cycling", name: "Cycling", icon: "🚴", color: "bg-cyan-100" },
-  { id: "golf", name: "Golf", icon: "⛳", color: "bg-emerald-100" },
-]
+// Icon mapping for sports (fallback when no imageUrl provided)
+const SPORT_ICON_MAP: Record<string, string> = {
+  tennis: "🎾",
+  basketball: "🏀",
+  soccer: "⚽",
+  football: "🏈",
+  volleyball: "🏐",
+  badminton: "🏸",
+  running: "🏃",
+  cycling: "🚴",
+  golf: "⛳",
+  swimming: "🏊",
+  baseball: "⚾",
+  tabltennis: "🏓",
+  boxing: "🥊",
+  yoga: "🧘",
+}
+
+const getSportIcon = (sportName: string): string => {
+  const key = sportName.toLowerCase().replace(/\s+/g, '')
+  return SPORT_ICON_MAP[key] || "🏅" // Default sports medal icon
+}
 
 export default function CreateMeetupPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [sports, setSports] = useState<Sport[]>([])
+  const [loadingSports, setLoadingSports] = useState(true)
   const [formData, setFormData] = useState<CreateMeetupData>({
     title: "",
     description: "",
@@ -39,12 +54,30 @@ export default function CreateMeetupPage() {
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const handleSportSelect = (sport: typeof SPORTS[0]) => {
+  // Fetch sports from backend on mount
+  useEffect(() => {
+    const fetchSports = async () => {
+      try {
+        const data = await SportService.getAllSports()
+        setSports(data)
+      } catch (error) {
+        console.error('Failed to fetch sports:', error)
+        alert('Failed to load sports. Please refresh the page.')
+      } finally {
+        setLoadingSports(false)
+      }
+    }
+    
+    fetchSports()
+  }, [])
+
+  const handleSportSelect = (sport: Sport) => {
+    const icon = sport.imageUrl || getSportIcon(sport.name)
     setFormData({
       ...formData,
       sport: sport.name,
-      sportIcon: sport.icon,
-      sportColor: sport.color,
+      sportIcon: icon,
+      sportColor: "", // You can add color logic later if needed
     })
   }
 
@@ -106,21 +139,42 @@ export default function CreateMeetupPage() {
                   Select Sport *
                 </Label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {SPORTS.map((sport) => (
-                    <button
-                      key={sport.id}
-                      type="button"
-                      onClick={() => handleSportSelect(sport)}
-                      className={`p-4 rounded-lg border-2 transition-all ${
-                        formData.sport === sport.name
-                          ? "border-primary bg-primary/10"
-                          : "border-border hover:border-primary/50"
-                      }`}
-                    >
-                      <div className="text-3xl mb-2">{sport.icon}</div>
-                      <div className="text-sm font-medium">{sport.name}</div>
-                    </button>
-                  ))}
+                  {loadingSports ? (
+                    <div className="col-span-full text-center py-8 text-muted-foreground">
+                      Loading sports...
+                    </div>
+                  ) : sports.length === 0 ? (
+                    <div className="col-span-full text-center py-8 text-muted-foreground">
+                      No sports available
+                    </div>
+                  ) : (
+                    sports.map((sport) => {
+                      const icon = getSportIcon(sport.name)
+                      return (
+                        <button
+                          key={sport.id}
+                          type="button"
+                          onClick={() => handleSportSelect(sport)}
+                          className={`p-4 rounded-lg border-2 transition-all ${
+                            formData.sport === sport.name
+                              ? "border-primary bg-primary/10"
+                              : "border-border hover:border-primary/50"
+                          }`}
+                        >
+                          {sport.imageUrl ? (
+                            <img 
+                              src={sport.imageUrl} 
+                              alt={sport.name}
+                              className="w-12 h-12 mx-auto mb-2 object-contain"
+                            />
+                          ) : (
+                            <div className="text-3xl mb-2">{icon}</div>
+                          )}
+                          <div className="text-sm font-medium">{sport.name}</div>
+                        </button>
+                      )
+                    })
+                  )}
                 </div>
                 {errors.sport && (
                   <p className="text-red-500 text-sm mt-2">{errors.sport}</p>

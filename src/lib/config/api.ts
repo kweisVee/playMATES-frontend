@@ -19,6 +19,11 @@ export const API_ENDPOINTS = {
     LEAVE: (id: string) => `/meetup/${id}/leave`,
     USER_MEETUPS: "/user/meetups"
   },
+  SPORT: {
+    LIST: "/sports",
+    CREATE: "/sports",
+    GET_BY_ID: (id: string) => `/sports/${id}`,
+  }
 } as const
 
 export const getDefaultHeaders = () => ({
