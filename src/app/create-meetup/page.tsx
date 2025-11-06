@@ -143,15 +143,16 @@ export default function CreateMeetupPage() {
                   ) : (
                     sports.map((sport) => {
                       const icon = getSportIcon(sport.name)
+                      const isSelected = formData.sport === sport.name
                       return (
                         <button
                           key={sport.id}
                           type="button"
                           onClick={() => handleSportSelect(sport)}
-                          className={`p-4 rounded-lg border-2 transition-all ${
-                            formData.sport === sport.name
-                              ? "border-primary bg-primary/10"
-                              : "border-border hover:border-primary/50"
+                          className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
+                            isSelected
+                              ? "border-primary bg-primary/10 shadow-[0_4px_20px_hsl(var(--primary)/0.4)] scale-105"
+                              : "border-border hover:border-primary/50 hover:bg-primary/5 hover:shadow-sm hover:scale-105"
                           }`}
                         >
                           {sport.imageUrl ? (
@@ -163,7 +164,9 @@ export default function CreateMeetupPage() {
                           ) : (
                             <div className="text-3xl mb-2">{icon}</div>
                           )}
-                          <div className="text-sm font-medium">{sport.name}</div>
+                          <div className={`text-sm font-medium ${isSelected ? "text-primary font-semibold" : ""}`}>
+                            {sport.name}
+                          </div>
                         </button>
                       )
                     })
