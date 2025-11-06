@@ -55,6 +55,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Install tailwindcss-animate
 `npm install tailwindcss-animate`
 
+## Install react-query for caching
+`npm install @tanstack/react-query`
+
+## Install for query/dev-tools 
+`npm install @tanstack/react-query-devtools`
 
 ## Creating an api call 
 1. URL can be found in `src/lib/config/api.ts` where you add your API endpoint

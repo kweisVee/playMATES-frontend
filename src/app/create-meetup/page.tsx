@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
-import { useState, useEffect} from "react"
+import { useState, useEffect } from "react"
 import { MeetupService, CreateMeetupData } from "@/lib/services/meetup"
 import { useRouter } from "next/navigation"
-import { Sport, SportService } from "@/lib/services/sport"
+import { Sport } from "@/lib/services/sport"
+import { useSports } from "@/hooks/useSports"
 
 // Icon mapping for sports (fallback when no imageUrl provided)
 const SPORT_ICON_MAP: Record<string, string> = {
@@ -36,8 +37,10 @@ const getSportIcon = (sportName: string): string => {
 export default function CreateMeetupPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [sports, setSports] = useState<Sport[]>([])
-  const [loadingSports, setLoadingSports] = useState(true)
+  
+  // React Query hook - automatically handles fetching, caching, and loading states!
+  const { data: sports = [], isLoading: loadingSports, error: sportsError } = useSports()
+  
   const [formData, setFormData] = useState<CreateMeetupData>({
     title: "",
     description: "",
@@ -54,22 +57,12 @@ export default function CreateMeetupPage() {
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  // Fetch sports from backend on mount
+  // Show error alert if sports fail to load
   useEffect(() => {
-    const fetchSports = async () => {
-      try {
-        const data = await SportService.getAllSports()
-        setSports(data)
-      } catch (error) {
-        console.error('Failed to fetch sports:', error)
-        alert('Failed to load sports. Please refresh the page.')
-      } finally {
-        setLoadingSports(false)
-      }
+    if (sportsError) {
+      alert('Failed to load sports. Please refresh the page.')
     }
-    
-    fetchSports()
-  }, [])
+  }, [sportsError])
 
   const handleSportSelect = (sport: Sport) => {
     const icon = sport.imageUrl || getSportIcon(sport.name)
