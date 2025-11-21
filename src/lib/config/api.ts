@@ -17,7 +17,7 @@ export const API_ENDPOINTS = {
     DELETE: (id: string) => `/meetup/${id}`,
     JOIN: (id: string) => `/meetup/${id}/join`,
     LEAVE: (id: string) => `/meetup/${id}/leave`,
-    USER_MEETUPS: "/user/meetups"
+    USER_MEETUPS: "/meetup/user"
   },
   SPORT: {
     LIST: "/sports",

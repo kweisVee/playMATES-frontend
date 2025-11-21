@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card"
 import { Search, Filter, Grid, List as ListIcon } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Meetup, MeetupService, MeetupFilters } from "@/lib/services/meetup"
+import { SportService, Sport } from "@/lib/services/sport"
 import { useRouter } from "next/navigation"
 import { useAuthContext } from "@/contexts/AuthContext"
 
@@ -21,20 +22,23 @@ export default function BrowsePage() {
   const [filters, setFilters] = useState<MeetupFilters>({})
   const [selectedSport, setSelectedSport] = useState<string>("all")
   const [selectedSkillLevel, setSelectedSkillLevel] = useState<string>("all")
-
-  const sports = [
-    "all",
-    "tennis",
-    "basketball",
-    "soccer",
-    "volleyball",
-    "badminton",
-    "running",
-    "cycling",
-    "golf",
-  ]
+  const [sports, setSports] = useState<Sport[]>([])
 
   const skillLevels = ["all", "beginner", "intermediate", "advanced"]
+
+  // Fetch sports on mount
+  useEffect(() => {
+    fetchSports()
+  }, [])
+
+  const fetchSports = async () => {
+    try {
+      const data = await SportService.getAllSports()
+      setSports(data.filter((sport: Sport) => sport.isActive))
+    } catch (error) {
+      console.error("Failed to fetch sports:", error)
+    }
+  }
 
   useEffect(() => {
     fetchMeetups()
@@ -81,13 +85,31 @@ export default function BrowsePage() {
   }
 
   const filteredMeetups = meetups.filter((meetup) => {
-    if (!searchTerm) return true
-    const term = searchTerm.toLowerCase()
-    return (
-      meetup.title.toLowerCase().includes(term) ||
-      meetup.sport.toLowerCase().includes(term) ||
-      meetup.location.toLowerCase().includes(term)
-    )
+    // Search term filter
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase()
+      const matchesSearch = 
+        meetup.title.toLowerCase().includes(term) ||
+        meetup.sport.toLowerCase().includes(term) ||
+        meetup.location.toLowerCase().includes(term)
+      if (!matchesSearch) return false
+    }
+
+    // Sport filter
+    if (selectedSport !== "all") {
+      if (meetup.sport.toLowerCase() !== selectedSport.toLowerCase()) {
+        return false
+      }
+    }
+
+    // Skill level filter
+    if (selectedSkillLevel !== "all") {
+      if (meetup.skillLevel.toLowerCase() !== selectedSkillLevel.toLowerCase()) {
+        return false
+      }
+    }
+
+    return true
   })
 
   return (
@@ -108,16 +130,16 @@ export default function BrowsePage() {
           <Card className="p-6 mb-8">
             <div className="flex flex-col md:flex-row gap-4 mb-4">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-green-600" />
                 <Input
                   placeholder="Search by title, sport, or location..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="pl-10"
+                  className="pl-10 border-green-300 focus:border-green-500 focus:ring-green-500"
                 />
               </div>
-              <Button onClick={handleSearch}>
+              <Button onClick={handleSearch} className="bg-green-600 hover:bg-green-700">
                 <Search className="h-4 w-4 mr-2" />
                 Search
               </Button>
@@ -130,11 +152,12 @@ export default function BrowsePage() {
                 <select
                   value={selectedSport}
                   onChange={(e) => setSelectedSport(e.target.value)}
-                  className="w-full p-2 border rounded-md bg-background"
+                  className="w-full p-2 border border-green-300 rounded-md bg-background focus:border-green-500 focus:ring-1 focus:ring-green-500"
                 >
+                  <option value="all">All Sports</option>
                   {sports.map((sport) => (
-                    <option key={sport} value={sport}>
-                      {sport.charAt(0).toUpperCase() + sport.slice(1)}
+                    <option key={sport.id} value={sport.name}>
+                      {sport.name.charAt(0).toUpperCase() + sport.name.slice(1)}
                     </option>
                   ))}
                 </select>
@@ -145,7 +168,7 @@ export default function BrowsePage() {
                 <select
                   value={selectedSkillLevel}
                   onChange={(e) => setSelectedSkillLevel(e.target.value)}
-                  className="w-full p-2 border rounded-md bg-background"
+                  className="w-full p-2 border border-green-300 rounded-md bg-background focus:border-green-500 focus:ring-1 focus:ring-green-500"
                 >
                   {skillLevels.map((level) => (
                     <option key={level} value={level}>
@@ -160,6 +183,7 @@ export default function BrowsePage() {
                   variant={viewMode === "grid" ? "default" : "outline"}
                   size="icon"
                   onClick={() => setViewMode("grid")}
+                  className={viewMode === "grid" ? "bg-green-100 hover:bg-green-200 text-green-700 border-green-300" : "border-green-500 text-green-700 hover:bg-green-50"}
                 >
                   <Grid className="h-4 w-4" />
                 </Button>
@@ -167,6 +191,7 @@ export default function BrowsePage() {
                   variant={viewMode === "list" ? "default" : "outline"}
                   size="icon"
                   onClick={() => setViewMode("list")}
+                  className={viewMode === "list" ? "bg-green-100 hover:bg-green-200 text-green-700 border-green-300" : "border-green-500 text-green-700 hover:bg-green-50"}
                 >
                   <ListIcon className="h-4 w-4" />
                 </Button>
@@ -213,12 +238,15 @@ export default function BrowsePage() {
               <p className="text-muted-foreground mb-6">
                 Try adjusting your filters or search terms
               </p>
-              <Button onClick={() => {
-                setSearchTerm("")
-                setSelectedSport("all")
-                setSelectedSkillLevel("all")
-                setFilters({})
-              }}>
+              <Button 
+                onClick={() => {
+                  setSearchTerm("")
+                  setSelectedSport("all")
+                  setSelectedSkillLevel("all")
+                  setFilters({})
+                }}
+                className="bg-green-600 hover:bg-green-700"
+              >
                 Clear Filters
               </Button>
             </Card>

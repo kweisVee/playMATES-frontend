@@ -97,6 +97,7 @@ export default function CreateMeetupPage() {
 
     try {
       setLoading(true)
+      console.log("formData:", formData)
       const response = await MeetupService.createMeetup(formData)
       
       // Show success message and redirect
