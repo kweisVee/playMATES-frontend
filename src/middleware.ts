@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server"
 // Define protected routes that require authentication
 const protectedRoutes = [
   "/dashboard",
-  "/browse",
+  "/browse-all-meetups",
   "/create-meetup",
   "/profile",
   "/my-meetups",

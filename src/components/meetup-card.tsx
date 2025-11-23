@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { MapPin, Calendar, Users, Clock } from "lucide-react"
-import { Meetup } from "@/lib/services/meetup"
+import { Meetup, getSportName } from "@/lib/services/meetup"
 import { cn } from "@/lib/utils"
 
 interface MeetupCardProps {
@@ -42,7 +42,7 @@ export function MeetupCard({
   // List view (horizontal layout)
   if (variant === "full") {
     return (
-      <Card className="bg-white border-2 border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-200 overflow-hidden">
+      <Card className="meetup-card-horizontal bg-white border-2 border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-200 overflow-hidden">
         <div className="px-6 py-4 flex items-center gap-6">
           {/* Icon and Title Section */}
           <div className="flex items-center gap-3 min-w-[250px]">
@@ -51,7 +51,7 @@ export function MeetupCard({
               <h3 className="font-bold text-base text-foreground leading-tight">
                 {meetup.title}
               </h3>
-              <p className="text-sm text-gray-500">{meetup.sport}</p>
+              <p className="text-sm text-gray-500">{getSportName(meetup.sport)}</p>
             </div>
           </div>
 
@@ -76,7 +76,7 @@ export function MeetupCard({
           {/* Skill Level */}
           <div className="min-w-[120px]">
             <span className="inline-block bg-teal-50 text-teal-700 text-sm px-3 py-1.5 rounded-lg capitalize font-medium">
-              {meetup.skillLevel}
+              {meetup.skillLevel === "all" ? "All Levels" : meetup.skillLevel}
             </span>
           </div>
 
@@ -96,7 +96,7 @@ export function MeetupCard({
               <Button
                 onClick={() => onJoin(meetup.id)}
                 disabled={isFull || loading}
-                className="text-sm px-6 h-10 bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-400 font-medium rounded-lg"
+                className="text-sm px-6 h-10 font-medium rounded-lg"
               >
                 {loading ? "Joining..." : isFull ? "Full" : "Join"}
               </Button>
@@ -127,7 +127,7 @@ export function MeetupCard({
   // Grid view (vertical layout)
   return (
     <Card
-      className="bg-white border-2 border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-200 overflow-hidden"
+      className="meetup-card-vertical bg-white border-2 border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-200 overflow-hidden"
     >
       <div className="p-6">
         {/* Header with Sport Icon and Title */}
@@ -137,7 +137,7 @@ export function MeetupCard({
             <h3 className="font-bold text-lg text-foreground leading-tight mb-1">
               {meetup.title}
             </h3>
-            <p className="text-sm text-gray-500">{meetup.sport}</p>
+            <p className="text-sm text-gray-500">{getSportName(meetup.sport)}</p>
           </div>
           {isHost && (
             <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
@@ -169,7 +169,7 @@ export function MeetupCard({
         {/* Skill Level Badge */}
         <div className="mb-6">
           <span className="inline-block bg-gray-100 text-gray-700 text-sm px-4 py-2 rounded-lg capitalize font-medium">
-            {meetup.skillLevel}
+            {meetup.skillLevel === "all" ? "All Levels" : meetup.skillLevel}
           </span>
         </div>
 
@@ -191,7 +191,7 @@ export function MeetupCard({
               size="lg"
               onClick={() => onJoin(meetup.id)}
               disabled={isFull || loading}
-              className="flex-1 text-sm h-12 bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-400 font-medium rounded-xl"
+              className="flex-1 text-sm h-12 font-medium rounded-xl"
             >
               {loading ? "Joining..." : isFull ? "Full" : "Join"}
             </Button>

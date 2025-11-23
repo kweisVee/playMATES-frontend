@@ -45,7 +45,7 @@ export function Navbar() {
               <Link href="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">
                 Dashboard
               </Link>
-              <Link href="/browse" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link href="/browse-all-meetups" className="text-sm font-medium hover:text-primary transition-colors">
                 Browse Meetups
               </Link>
               <Link href="/my-meetups" className="text-sm font-medium hover:text-primary transition-colors">

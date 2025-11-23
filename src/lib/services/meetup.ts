@@ -1,11 +1,17 @@
 import { API_BASE_URL, API_ENDPOINTS, getAuthHeaders } from "@/lib/config/api"
 
+// Sport object as returned by backend (subset of full Sport interface)
+export interface MeetupSport {
+  id: number
+  name: string
+}
+
 // TypeScript interfaces for meetup data
 export interface Meetup {
   id: string
   title: string
   description: string
-  sport: string
+  sport: string | MeetupSport  // Backend can return either string or object
   sportIcon?: string
   sportColor?: string
   hostId: string
@@ -22,6 +28,19 @@ export interface Meetup {
   participants?: Participant[]
   createdAt?: string
   updatedAt?: string
+}
+
+// Utility function to extract sport name from either string or object
+// This ensures consistent handling across the codebase
+export function getSportName(sport: string | MeetupSport | undefined): string {
+  if (!sport) return ""
+  if (typeof sport === "string") {
+    return sport
+  }
+  if (typeof sport === "object" && "name" in sport) {
+    return sport.name
+  }
+  return "Unknown Sport"
 }
 
 export interface Participant {
