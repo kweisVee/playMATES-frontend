@@ -30,8 +30,12 @@ export default function Dashboard() {
         // Fetch user's meetups
         const userMeetups = await MeetupService.getUserMeetups()
         
+        // Ensure hosting and joined are arrays
+        const hosting = Array.isArray(userMeetups?.hosting) ? userMeetups.hosting : []
+        const joined = Array.isArray(userMeetups?.joined) ? userMeetups.joined : []
+        
         // Filter upcoming meetups
-        const upcoming = [...userMeetups.hosting, ...userMeetups.joined]
+        const upcoming = [...hosting, ...joined]
           .filter((m) => new Date(m.date) >= new Date())
           .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
           .slice(0, 3)
@@ -40,22 +44,31 @@ export default function Dashboard() {
         
         // Fetch recommended meetups (all meetups for now)
         const allMeetups = await MeetupService.getMeetups()
-        const recommended = allMeetups
-          .filter((m) => new Date(m.date) >= new Date())
-          .slice(0, 4)
+        const recommended = Array.isArray(allMeetups) 
+          ? allMeetups
+              .filter((m) => new Date(m.date) >= new Date())
+              .slice(0, 4)
+          : []
         
         setRecommendedMeetups(recommended)
         
         // Calculate stats
         setStats({
-          totalJoined: userMeetups.joined.length,
-          totalHosted: userMeetups.hosting.length,
+          totalJoined: joined.length,
+          totalHosted: hosting.length,
           upcomingCount: upcoming.length,
         })
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error)
         console.log("Note: This is expected if backend API endpoints are not yet implemented")
-        // Set loading to false even on error so the page still renders
+        // Set defaults on error
+        setUpcomingMeetups([])
+        setRecommendedMeetups([])
+        setStats({
+          totalJoined: 0,
+          totalHosted: 0,
+          upcomingCount: 0,
+        })
       } finally {
         setLoading(false)
       }
@@ -173,7 +186,7 @@ export default function Dashboard() {
         </section>
 
         {/* Upcoming Meetups */}
-        <section className="container mx-auto px-4 mb-12">
+        <section className="meetups-container mx-auto px-4 mb-12">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Your Upcoming Meetups</h2>
             <Link href="/my-meetups">
@@ -207,7 +220,7 @@ export default function Dashboard() {
                 Join or create a meetup to get started!
               </p>
               <div className="flex gap-4 justify-center">
-                <Link href="/browse">
+                <Link href="/browse-all-meetups">
                   <Button>Browse Meetups</Button>
                 </Link>
                 <Link href="/create-meetup">
@@ -222,7 +235,7 @@ export default function Dashboard() {
         <section className="container mx-auto px-4 pb-12">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Recommended for You</h2>
-            <Link href="/browse">
+            <Link href="/browse-all-meetups">
               <Button variant="ghost" size="sm">
                 Browse All
               </Button>

@@ -27,10 +27,12 @@ export default function MyMeetupsPage() {
     try {
       setLoading(true)
       const data = await MeetupService.getUserMeetups()
-      setHostingMeetups(data.hosting)
-      setJoinedMeetups(data.joined)
+      setHostingMeetups(data.hosting || [])
+      setJoinedMeetups(data.joined || [])
     } catch (error) {
       console.error("Failed to fetch user meetups:", error)
+      setHostingMeetups([])
+      setJoinedMeetups([])
     } finally {
       setLoading(false)
     }
@@ -70,7 +72,7 @@ export default function MyMeetupsPage() {
     }
   }
 
-  const activeMeetups = activeTab === "hosting" ? hostingMeetups : joinedMeetups
+  const activeMeetups = (activeTab === "hosting" ? hostingMeetups : joinedMeetups) || []
   const upcomingMeetups = activeMeetups.filter(
     (m) => m.status === "upcoming" && new Date(m.date) >= new Date()
   )
@@ -206,7 +208,7 @@ export default function MyMeetupsPage() {
                         </Button>
                       </Link>
                     ) : (
-                      <Link href="/browse">
+                      <Link href="/browse-all-meetups">
                         <Button>Browse Meetups</Button>
                       </Link>
                     )}

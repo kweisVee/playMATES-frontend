@@ -14,7 +14,7 @@ import {
   AlertCircle,
 } from "lucide-react"
 import { useState, useEffect } from "react"
-import { Meetup, MeetupService } from "@/lib/services/meetup"
+import { Meetup, MeetupService, getSportName } from "@/lib/services/meetup"
 import { useAuthContext } from "@/contexts/AuthContext"
 import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
@@ -41,7 +41,7 @@ export default function MeetupDetailPage() {
     } catch (error) {
       console.error("Failed to fetch meetup:", error)
       alert("Failed to load meetup details")
-      router.push("/browse")
+      router.push("/browse-all-meetups")
     } finally {
       setLoading(false)
     }
@@ -188,7 +188,7 @@ export default function MeetupDetailPage() {
                   <div>
                     <h1 className="text-4xl font-bold mb-2">{meetup.title}</h1>
                     <p className="text-lg text-muted-foreground mb-4">
-                      {meetup.sport}
+                      {getSportName(meetup.sport)}
                     </p>
                     {isCancelled && (
                       <span className="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
@@ -303,7 +303,7 @@ export default function MeetupDetailPage() {
                     <div>
                       <p className="font-medium">Skill Level</p>
                       <p className="text-sm text-muted-foreground capitalize">
-                        {meetup.skillLevel}
+                        {meetup.skillLevel === "all" ? "All Levels" : meetup.skillLevel}
                       </p>
                     </div>
                   </div>
