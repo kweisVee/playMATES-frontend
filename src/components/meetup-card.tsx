@@ -55,10 +55,16 @@ export function MeetupCard({
             </div>
           </div>
 
-          {/* Date */}
-          <div className="flex items-center gap-2 text-sm text-gray-600 min-w-[140px]">
-            <Clock className="h-4 w-4 text-gray-400 flex-shrink-0" />
-            <span>{formatDate(meetup.date)}</span>
+          {/* Date and Time */}
+          <div className="min-w-[140px]">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0" />
+              <span>{formatDate(meetup.date)}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+              <Clock className="h-4 w-4 text-gray-400 flex-shrink-0" />
+              <span>{meetup.time}</span>
+            </div>
           </div>
 
           {/* Location */}
@@ -75,7 +81,7 @@ export function MeetupCard({
 
           {/* Skill Level */}
           <div className="min-w-[120px]">
-            <span className="inline-block bg-teal-50 text-teal-700 text-sm px-3 py-1.5 rounded-lg capitalize font-medium">
+            <span className="inline-block bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-lg capitalize font-medium">
               {meetup.skillLevel === "all" ? "All Levels" : meetup.skillLevel}
             </span>
           </div>

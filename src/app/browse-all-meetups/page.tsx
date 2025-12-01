@@ -518,8 +518,8 @@ export default function BrowsePage() {
                   <div
                     className={
                       viewMode === "grid"
-                        ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                        : "space-y-4"
+                        ? "meetups-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        : "meetups-listspace-y-4"
                     }
                   >
                     {filteredMeetups.map((meetup) => (
