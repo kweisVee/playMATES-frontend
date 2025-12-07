@@ -26,9 +26,10 @@ export default function MyMeetupsPage() {
   const fetchUserMeetups = async () => {
     try {
       setLoading(true)
-      const data = await MeetupService.getUserMeetups()
-      setHostingMeetups(data.hosting || [])
-      setJoinedMeetups(data.joined || [])
+      const hostedMeetupsData = await MeetupService.getUserHostedMeetups()
+      const joinedMeetupsData = await MeetupService.getUserJoinedMeetups()
+      setHostingMeetups(hostedMeetupsData)
+      setJoinedMeetups(joinedMeetupsData)
     } catch (error) {
       console.error("Failed to fetch user meetups:", error)
       setHostingMeetups([])
