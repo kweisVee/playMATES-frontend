@@ -28,7 +28,7 @@ export default function Dashboard() {
       try {
         setLoading(true)
         // Fetch user's meetups
-        const userMeetups = await MeetupService.getUserMeetups()
+        const userMeetups = await MeetupService.getUserHostedMeetups()
         
         // Ensure hosting and joined are arrays
         const hosting = Array.isArray(userMeetups?.hosting) ? userMeetups.hosting : []

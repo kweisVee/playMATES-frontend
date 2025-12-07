@@ -79,10 +79,10 @@ export interface MeetupFilters {
   search?: string
 }
 
-export interface UserMeetups {
-  hosting: Meetup[]
-  joined: Meetup[]
-}
+// export interface UserMeetups {
+//   hosting: Meetup[]
+//   joined: Meetup[]
+// }
 
 // Service class for meetup API calls
 export class MeetupService {
@@ -254,9 +254,9 @@ export class MeetupService {
     return response.json()
   }
 
-  static async getUserMeetups(): Promise<UserMeetups> {
-    console.log("meetup.ts: MeetupService: Get User Meetups starting...")
-    const url = `${API_BASE_URL}${API_ENDPOINTS.MEETUP.USER_MEETUPS}`
+  static async getUserHostedMeetups(): Promise<Meetup[]> {
+    console.log("meetup.ts: MeetupService: Get User Hosted Meetups starting...")
+    const url = `${API_BASE_URL}${API_ENDPOINTS.MEETUP.USER_HOSTED_MEETUPS}`
     const headers = getAuthHeaders()
     
     console.log("API call URL:", url)
@@ -269,8 +269,30 @@ export class MeetupService {
     })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: "meetup.ts: MeetupService: Failed to fetch user meetups" }))
-      throw new Error(errorData.message || "meetup.ts: MeetupService: Failed to fetch user meetups")
+      const errorData = await response.json().catch(() => ({ message: "meetup.ts: MeetupService: Failed to fetch user hosted meetups" }))
+      throw new Error(errorData.message || "meetup.ts: MeetupService: Failed to fetch user hosted meetups")
+    }
+
+    return response.json()
+  }
+
+  static async getUserJoinedMeetups(): Promise<Meetup[]> {
+    console.log("meetup.ts: MeetupService: Get User Joined Meetups starting...")
+    const url = `${API_BASE_URL}${API_ENDPOINTS.MEETUP.USER_JOINED_MEETUPS}`
+    const headers = getAuthHeaders()
+    
+    console.log("API call URL:", url)
+    console.log("Headers being sent:", headers)
+    
+    const response = await fetch(url, {
+      method: "GET",
+      headers: headers,
+      credentials: "include", // Send cookies with request
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ message: "meetup.ts: MeetupService: Failed to fetch user joined meetups" }))
+      throw new Error(errorData.message || "meetup.ts: MeetupService: Failed to fetch user joined meetups")
     }
 
     return response.json()
