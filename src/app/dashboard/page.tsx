@@ -28,14 +28,15 @@ export default function Dashboard() {
       try {
         setLoading(true)
         // Fetch user's meetups
-        const userMeetups = await MeetupService.getUserHostedMeetups()
+        const hosting = await MeetupService.getUserHostedMeetups()
+        const joined = await MeetupService.getUserJoinedMeetups()
         
         // Ensure hosting and joined are arrays
-        const hosting = Array.isArray(userMeetups?.hosting) ? userMeetups.hosting : []
-        const joined = Array.isArray(userMeetups?.joined) ? userMeetups.joined : []
+        const hostingArray = Array.isArray(hosting) ? hosting : []
+        const joinedArray = Array.isArray(joined) ? joined : []
         
         // Filter upcoming meetups
-        const upcoming = [...hosting, ...joined]
+        const upcoming = [...hostingArray, ...joinedArray]
           .filter((m) => new Date(m.date) >= new Date())
           .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
           .slice(0, 3)
@@ -54,8 +55,8 @@ export default function Dashboard() {
         
         // Calculate stats
         setStats({
-          totalJoined: joined.length,
-          totalHosted: hosting.length,
+          totalJoined: joinedArray.length,
+          totalHosted: hostingArray.length,
           upcomingCount: upcoming.length,
         })
       } catch (error) {
