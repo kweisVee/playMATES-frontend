@@ -27,6 +27,8 @@ export default function BrowsePage() {
   const [selectedMeetup, setSelectedMeetup] = useState<Meetup | null>(null)
   const [meetupLoading, setMeetupLoading] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
+  const [joinedMeetupIds, setJoinedMeetupIds] = useState<Set<string>>(new Set())
+  const [joinedMeetupsLoading, setJoinedMeetupsLoading] = useState(false)
 
   const skillLevels = ["all", "beginner", "intermediate", "advanced"]
 
@@ -41,6 +43,30 @@ export default function BrowsePage() {
       setSports(data.filter((sport: Sport) => sport.isActive))
     } catch (error) {
       console.error("Failed to fetch sports:", error)
+    }
+  }
+
+  // Fetch user's joined meetups on mount and when user changes
+  useEffect(() => {
+    if (user?.id) {
+      fetchUserJoinedMeetups()
+    } else {
+      // If no user, clear joined meetups and mark as not loading
+      setJoinedMeetupIds(new Set())
+      setJoinedMeetupsLoading(false)
+    }
+  }, [user?.id])
+
+  const fetchUserJoinedMeetups = async () => {
+    try {
+      setJoinedMeetupsLoading(true)
+      const data = await MeetupService.getUserJoinedMeetups()
+      const joinedIds = new Set(data.map((meetup: Meetup) => meetup.id))
+      setJoinedMeetupIds(joinedIds)
+    } catch (error) {
+      console.error("Failed to fetch user joined meetups:", error)
+    } finally {
+      setJoinedMeetupsLoading(false)
     }
   }
 
@@ -78,6 +104,8 @@ export default function BrowsePage() {
       await MeetupService.joinMeetup(meetupId)
       // Refresh meetups after joining
       fetchMeetups()
+      // Refresh joined meetups list
+      fetchUserJoinedMeetups()
       // Refresh meetup details if viewing a specific meetup
       if (selectedMeetupId === meetupId && selectedMeetup) {
         const data = await MeetupService.getMeetupById(meetupId)
@@ -126,8 +154,9 @@ export default function BrowsePage() {
         const data = await MeetupService.getMeetupById(meetupId)
         setSelectedMeetup(data)
       }
-      // Refresh meetups list
+      // Refresh meetups list and joined meetups
       fetchMeetups()
+      fetchUserJoinedMeetups()
     } catch (error) {
       console.error("Failed to join meetup:", error)
       alert("Failed to join meetup. Please try again.")
@@ -149,8 +178,9 @@ export default function BrowsePage() {
         const data = await MeetupService.getMeetupById(meetupId)
         setSelectedMeetup(data)
       }
-      // Refresh meetups list
+      // Refresh meetups list and joined meetups
       fetchMeetups()
+      fetchUserJoinedMeetups()
     } catch (error) {
       console.error("Failed to leave meetup:", error)
       alert("Failed to leave meetup. Please try again.")
@@ -455,7 +485,7 @@ export default function BrowsePage() {
                           ) : selectedMeetup.participants?.some((p) => p.id === user?.id) ? (
                             <Button
                               variant="outline"
-                              className="w-full"
+                              className="w-full bg-rose-100 text-rose-700 hover:bg-rose-200 border border-rose-300"
                               onClick={() => handleLeave(selectedMeetup.id)}
                               disabled={actionLoading || new Date(selectedMeetup.date) < new Date() || selectedMeetup.status === "cancelled"}
                             >
@@ -509,7 +539,7 @@ export default function BrowsePage() {
                 </div>
 
                 {/* Meetups Grid/List */}
-                {loading ? (
+                {loading || joinedMeetupsLoading ? (
                   <div className="text-center py-12">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
                     <p className="text-muted-foreground">Loading meetups...</p>
@@ -528,8 +558,11 @@ export default function BrowsePage() {
                         meetup={meetup}
                         variant={viewMode === "list" ? "full" : "compact"}
                         onJoin={handleJoinMeetup}
+                        onLeave={handleLeave}
                         onView={handleViewMeetup}
+                        isJoined={joinedMeetupIds.has(meetup.id)}
                         isHost={meetup.hostId === user?.id}
+                        loading={actionLoading}
                       />
                     ))}
                   </div>
