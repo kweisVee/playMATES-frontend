@@ -113,7 +113,7 @@ export function MeetupCard({
                 variant="outline"
                 onClick={() => onLeave(meetup.id)}
                 disabled={loading}
-                className="text-sm px-6 h-10 border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium rounded-lg"
+                className="text-sm px-6 h-10 bg-rose-100 text-rose-700 hover:bg-rose-200 border border-rose-300 font-medium rounded-lg"
               >
                 {loading ? "Leaving..." : "Leave"}
               </Button>
@@ -209,7 +209,7 @@ export function MeetupCard({
               size="lg"
               onClick={() => onLeave(meetup.id)}
               disabled={loading}
-              className="flex-1 text-sm h-12 border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-medium rounded-xl"
+              className="flex-1 text-sm h-12 bg-rose-100 text-rose-700 hover:bg-rose-200 border border-rose-300 font-medium rounded-xl"
             >
               {loading ? "Leaving..." : "Leave"}
             </Button>

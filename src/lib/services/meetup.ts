@@ -215,7 +215,7 @@ export class MeetupService {
     const url = `${API_BASE_URL}${API_ENDPOINTS.MEETUP.JOIN(id)}`
     const headers = getAuthHeaders()
     
-    console.log("API call URL:", url)
+    console.log("API call URL for joinMeetup:", url)
     console.log("Headers being sent:", headers)
     
     const response = await fetch(url, {
