@@ -10,6 +10,7 @@ import { MeetupService, CreateMeetupData } from "@/lib/services/meetup"
 import { useRouter } from "next/navigation"
 import { Sport } from "@/lib/services/sport"
 import { useSports } from "@/hooks/useSports"
+import { useAuthContext } from "@/contexts/AuthContext"
 
 // Icon mapping for sports (fallback when no imageUrl provided)
 const SPORT_ICON_MAP: Record<string, string> = {
@@ -36,6 +37,7 @@ const getSportIcon = (sportName: string): string => {
 
 export default function CreateMeetupPage() {
   const router = useRouter()
+  const { user } = useAuthContext()
   const [loading, setLoading] = useState(false)
   
   // React Query hook - automatically handles fetching, caching, and loading states!
@@ -52,10 +54,14 @@ export default function CreateMeetupPage() {
     state: "",
     date: "",
     time: "",
-    maxParticipants: 4,
+    maxParticipants: 2,
     skillLevel: "all",
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
+  // Local state for maxParticipants input to allow free typing
+  const [maxParticipantsInput, setMaxParticipantsInput] = useState<string>("2")
+  const [zipcode, setZipcode] = useState<string>("")
+  const [zipcodeLoading, setZipcodeLoading] = useState(false)
 
   // Show error alert if sports fail to load
   useEffect(() => {
@@ -63,6 +69,52 @@ export default function CreateMeetupPage() {
       alert('Failed to load sports. Please refresh the page.')
     }
   }, [sportsError])
+
+  // Sync maxParticipantsInput with formData.maxParticipants (for external updates)
+  useEffect(() => {
+    setMaxParticipantsInput(formData.maxParticipants.toString())
+  }, [formData.maxParticipants])
+
+  // Prefill city and state from user's profile if available (only once on mount)
+  useEffect(() => {
+    if (user?.city && !formData.city) {
+      setFormData(prev => ({ ...prev, city: user.city || "" }))
+    }
+    if (user?.state && !formData.state) {
+      setFormData(prev => ({ ...prev, state: user.state || "" }))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.city, user?.state])
+
+  // Function to lookup city and state from zipcode
+  const lookupZipcode = async (zip: string) => {
+    if (!zip || zip.length < 5) return
+
+    // Only lookup US zipcodes (5 digits)
+    if (!/^\d{5}$/.test(zip)) return
+
+    try {
+      setZipcodeLoading(true)
+      const response = await fetch(`https://api.zippopotam.us/us/${zip}`)
+      
+      if (response.ok) {
+        const data = await response.json()
+        if (data.places && data.places.length > 0) {
+          const place = data.places[0]
+          setFormData(prev => ({
+            ...prev,
+            city: place['place name'] || prev.city,
+            state: place['state abbreviation'] || prev.state,
+          }))
+        }
+      }
+    } catch (error) {
+      console.error("Failed to lookup zipcode:", error)
+      // Silently fail - user can still manually enter city/state
+    } finally {
+      setZipcodeLoading(false)
+    }
+  }
 
   const handleSportSelect = (sport: Sport) => {
     const icon = sport.imageUrl || getSportIcon(sport.name)
@@ -126,7 +178,7 @@ export default function CreateMeetupPage() {
 
         <div className="container mx-auto px-4 py-8 max-w-3xl">
           <form onSubmit={handleSubmit}>
-            <Card className="p-8">
+            <Card className="create-meetup-card p-8">
               {/* Sport Selection */}
               <div className="mb-6">
                 <Label className="text-lg font-semibold mb-3 block">
@@ -207,6 +259,31 @@ export default function CreateMeetupPage() {
                   }
                   className="w-full mt-2 p-3 border rounded-md min-h-[100px] bg-background"
                 />
+              </div>
+
+              {/* Zipcode */}
+              <div className="mb-6">
+                <Label htmlFor="zipcode">Zipcode</Label>
+                <Input
+                  id="zipcode"
+                  type="text"
+                  placeholder="10001"
+                  value={zipcode}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '').slice(0, 5)
+                    setZipcode(value)
+                    if (value.length === 5) {
+                      lookupZipcode(value)
+                    }
+                  }}
+                  className="mt-2 max-w-xs"
+                  disabled={zipcodeLoading}
+                />
+                {zipcodeLoading && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Looking up location...
+                  </p>
+                )}
               </div>
 
               {/* Location */}
@@ -297,13 +374,42 @@ export default function CreateMeetupPage() {
                   type="number"
                   min="2"
                   max="50"
-                  value={formData.maxParticipants}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      maxParticipants: parseInt(e.target.value) || 2,
-                    })
-                  }
+                  value={maxParticipantsInput}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Allow free typing - update input state immediately
+                    setMaxParticipantsInput(value);
+                    // Update formData if it's a valid number
+                    const numValue = parseInt(value, 10);
+                    if (!isNaN(numValue) && numValue > 0) {
+                      setFormData({
+                        ...formData,
+                        maxParticipants: numValue,
+                      });
+                    }
+                  }}
+                  onBlur={(e) => {
+                    // Validate and enforce constraints when user leaves the field
+                    const value = parseInt(e.target.value, 10);
+                    if (isNaN(value) || value < 2) {
+                      const finalValue = 2;
+                      setMaxParticipantsInput("2");
+                      setFormData({
+                        ...formData,
+                        maxParticipants: finalValue,
+                      });
+                    } else if (value > 50) {
+                      const finalValue = 50;
+                      setMaxParticipantsInput("50");
+                      setFormData({
+                        ...formData,
+                        maxParticipants: finalValue,
+                      });
+                    } else {
+                      // Ensure input matches the valid number
+                      setMaxParticipantsInput(value.toString());
+                    }
+                  }}
                   className="mt-2"
                 />
                 {errors.maxParticipants && (
@@ -316,22 +422,39 @@ export default function CreateMeetupPage() {
               {/* Skill Level */}
               <div className="mb-8">
                 <Label htmlFor="skillLevel">Skill Level *</Label>
-                <select
-                  id="skillLevel"
-                  value={formData.skillLevel}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      skillLevel: e.target.value as CreateMeetupData["skillLevel"],
-                    })
-                  }
-                  className="w-full mt-2 p-2 border rounded-md bg-background"
-                >
-                  <option value="all">All Levels</option>
-                  <option value="beginner">Beginner</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="advanced">Advanced</option>
-                </select>
+                <div className="relative mt-2">
+                  <select
+                    id="skillLevel"
+                    value={formData.skillLevel}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        skillLevel: e.target.value as CreateMeetupData["skillLevel"],
+                      })
+                    }
+                    className="w-full p-2 pr-10 border rounded-md bg-background appearance-none cursor-pointer text-sm"
+                  >
+                    <option value="all">All Levels</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                  </select>
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg
+                      className="w-4 h-4 text-muted-foreground"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
               </div>
 
               {/* Submit Buttons */}
