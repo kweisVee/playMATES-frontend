@@ -18,6 +18,7 @@ import { Meetup, MeetupService, getSportName } from "@/lib/services/meetup"
 import { useAuthContext } from "@/contexts/AuthContext"
 import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
+import { cn } from "@/lib/utils"
 
 export default function MeetupDetailPage() {
   const params = useParams()
@@ -158,10 +159,17 @@ export default function MeetupDetailPage() {
   }
 
   const isHost = meetup.hostId === user?.id
-  const isParticipant = meetup.participants?.some((p) => p.id === user?.id)
+  // Ensure both IDs are compared as strings for consistency
+  const isParticipant = meetup.participants?.some((p) => String(p.id) === String(user?.id)) ?? false
   const isFull = meetup.currentParticipants >= meetup.maxParticipants
   const isPast = new Date(meetup.date) < new Date()
   const isCancelled = meetup.status === "cancelled"
+
+  // Debug logging
+  console.log("Meetup participants:", meetup.participants)
+  console.log("User ID:", user?.id, "Type:", typeof user?.id)
+  console.log("Is Participant:", isParticipant)
+  console.log("Participant IDs:", meetup.participants?.map(p => ({ id: p.id, type: typeof p.id })))
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -342,23 +350,24 @@ export default function MeetupDetailPage() {
                       Delete Meetup
                     </Button>
                   </div>
-                ) : isParticipant ? (
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={handleLeave}
-                    disabled={actionLoading || isPast || isCancelled}
-                  >
-                    {actionLoading ? "Leaving..." : "Leave Meetup"}
-                  </Button>
                 ) : (
                   <Button
-                    className="w-full"
-                    onClick={handleJoin}
+                    variant={isParticipant ? "outline" : "default"}
+                    className={cn(
+                      "w-full font-medium rounded-xl",
+                      isParticipant 
+                        ? "bg-rose-100 text-rose-700 hover:bg-rose-200 border border-rose-300"
+                        : ""
+                    )}
+                    onClick={isParticipant ? handleLeave : handleJoin}
                     disabled={actionLoading || isFull || isPast || isCancelled}
                   >
                     {actionLoading
-                      ? "Joining..."
+                      ? isParticipant 
+                        ? "Leaving..." 
+                        : "Joining..."
+                      : isParticipant
+                      ? "Leave Meetup"
                       : isFull
                       ? "Meetup Full"
                       : isPast
