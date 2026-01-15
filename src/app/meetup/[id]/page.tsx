@@ -183,34 +183,40 @@ export default function MeetupDetailPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-b from-primary/10 to-white">
+      <div className="min-h-screen bg-background">
         {/* Header with Sport Icon */}
-        <section
-          className={`${meetup.sportColor || "bg-blue-100"} py-16`}
-        >
+        <section className="bg-primary text-primary-foreground py-10 md:py-12">
           <div className="container mx-auto px-4">
             <div className="flex items-start gap-6">
-              <div className="text-6xl">{meetup.sportIcon || "⚽"}</div>
+              <div className="text-5xl leading-none md:text-6xl">
+                {meetup.sportIcon || "⚽"}
+              </div>
               <div className="flex-1">
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h1 className="text-4xl font-bold mb-2">{meetup.title}</h1>
-                    <p className="text-lg text-muted-foreground mb-4">
+                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-2">
+                      {meetup.title}
+                    </h1>
+                    <p className="text-base md:text-lg text-primary-foreground/80">
                       {getSportName(meetup.sport)}
                     </p>
-                    {isCancelled && (
-                      <span className="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                        Cancelled
-                      </span>
-                    )}
-                    {isPast && !isCancelled && (
-                      <span className="inline-block bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                        Past Event
-                      </span>
-                    )}
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {isCancelled && (
+                        <span className="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                          Cancelled
+                        </span>
+                      )}
+                      {isPast && !isCancelled && (
+                        <span className="inline-block bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                          Past Event
+                        </span>
+                      )}
+                    </div>
                   </div>
+
                   {isHost && (
-                    <span className="bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-semibold">
+                    <span className="shrink-0 rounded-full border border-primary-foreground/25 bg-primary-foreground/10 px-4 py-2 text-sm font-semibold text-primary-foreground">
                       You're the Host
                     </span>
                   )}
@@ -225,7 +231,7 @@ export default function MeetupDetailPage() {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Description */}
-              <Card className="p-6">
+              <Card className="p-6 shadow-sm">
                 <h2 className="text-2xl font-bold mb-4">About This Meetup</h2>
                 <p className="text-foreground whitespace-pre-wrap">
                   {meetup.description || "No description provided."}
@@ -233,7 +239,7 @@ export default function MeetupDetailPage() {
               </Card>
 
               {/* Participants */}
-              <Card className="p-6">
+              <Card className="p-6 shadow-sm">
                 <h2 className="text-2xl font-bold mb-4">
                   Participants ({meetup.currentParticipants}/{meetup.maxParticipants})
                 </h2>
@@ -271,7 +277,7 @@ export default function MeetupDetailPage() {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Details Card */}
-              <Card className="p-6">
+              <Card className="p-6 shadow-sm">
                 <h2 className="text-xl font-bold mb-4">Details</h2>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
@@ -319,7 +325,7 @@ export default function MeetupDetailPage() {
               </Card>
 
               {/* Action Buttons */}
-              <Card className="p-6">
+              <Card className="p-6 shadow-sm">
                 {isHost ? (
                   <div className="space-y-3">
                     <Button
@@ -380,7 +386,7 @@ export default function MeetupDetailPage() {
               </Card>
 
               {/* Host Info */}
-              <Card className="p-6">
+              <Card className="p-6 shadow-sm">
                 <h2 className="text-xl font-bold mb-4">Host</h2>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
