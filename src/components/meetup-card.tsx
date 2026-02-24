@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { MapPin, Calendar, Users, Clock } from "lucide-react"
 import { Meetup, getSportName } from "@/lib/services/meetup"
-import { cn } from "@/lib/utils"
 
 interface MeetupCardProps {
   meetup: Meetup
@@ -32,99 +31,108 @@ export function MeetupCard({
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
-    return date.toLocaleDateString("en-US", { 
-      month: "short", 
-      day: "numeric", 
-      year: "numeric" 
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     })
   }
+
+  const formatTime = (timeValue: string) => {
+    const [hours = "0", minutes = "00"] = timeValue.split(":")
+    const date = new Date()
+    date.setHours(Number(hours), Number(minutes), 0, 0)
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+    })
+  }
+
+  const skillLabel =
+    meetup.skillLevel === "all"
+      ? "All Levels"
+      : `${meetup.skillLevel.charAt(0).toUpperCase()}${meetup.skillLevel.slice(1)}`
 
   // List view (horizontal layout)
   if (variant === "full") {
     return (
-      <Card className="meetup-card-horizontal bg-white border-2 border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-200 overflow-hidden">
-        <div className="px-6 py-4 flex items-center gap-6">
-          {/* Icon and Title Section */}
-          <div className="flex items-center gap-3 min-w-[250px]">
-            <div className="text-3xl">{meetup.sportIcon || "⚽"}</div>
-            <div>
-              <h3 className="font-bold text-base text-foreground leading-tight">
+      <Card className="meetup-card-horizontal overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-0 shadow-[0_16px_56px_-32px_rgba(15,23,42,0.45)] transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-[0_24px_70px_-32px_rgba(6,95,70,0.45)]">
+        <div className="flex flex-col gap-4 p-5 lg:flex-row lg:items-center">
+          <div className="flex min-w-0 flex-1 items-start gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-2xl">
+              {meetup.sportIcon || "⚽"}
+            </div>
+            <div className="min-w-0">
+              <h3 className="truncate font-bold text-base text-slate-900 leading-tight">
                 {meetup.title}
               </h3>
-              <p className="text-sm text-gray-500">{getSportName(meetup.sport)}</p>
+              <p className="mt-1 text-sm text-slate-500">{getSportName(meetup.sport)}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                  {skillLabel}
+                </span>
+                {isHost && (
+                  <span className="inline-flex rounded-full border border-emerald-300 bg-emerald-600 px-2.5 py-1 text-xs font-semibold text-white">
+                    Host
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Date and Time */}
-          <div className="min-w-[140px]">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0" />
+          <div className="grid flex-1 gap-2 text-sm text-slate-600 sm:grid-cols-2 lg:max-w-xl">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-emerald-600 shrink-0" />
               <span>{formatDate(meetup.date)}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-              <Clock className="h-4 w-4 text-gray-400 flex-shrink-0" />
-              <span>{meetup.time}</span>
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-emerald-600 shrink-0" />
+              <span>{formatTime(meetup.time)}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-emerald-600 shrink-0" />
+              <span className="truncate">{meetup.location}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-emerald-600 shrink-0" />
+              <span>
+                {meetup.currentParticipants}/{meetup.maxParticipants} joined
+              </span>
             </div>
           </div>
 
-          {/* Location */}
-          <div className="flex items-center gap-2 text-sm text-gray-600 min-w-[160px]">
-            <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
-            <span className="truncate">{meetup.location}</span>
-          </div>
-
-          {/* Participants */}
-          <div className="flex items-center gap-2 text-sm text-gray-600 min-w-[60px]">
-            <Users className="h-4 w-4 text-gray-400 flex-shrink-0" />
-            <span>{meetup.currentParticipants}/{meetup.maxParticipants}</span>
-          </div>
-
-          {/* Skill Level */}
-          <div className="min-w-[120px]">
-            <span className="inline-block bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-lg capitalize font-medium">
-              {meetup.skillLevel === "all" ? "All Levels" : meetup.skillLevel}
-            </span>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-2 ml-auto">
+          <div className="ml-auto flex shrink-0 flex-wrap gap-2 lg:justify-end">
             {onView && (
               <Button
                 variant="outline"
                 onClick={() => onView(meetup.id)}
-                className="text-sm px-6 h-10 border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium rounded-lg"
+                className="h-10 rounded-lg border-slate-300 font-medium text-slate-700 hover:bg-slate-50"
               >
                 View
               </Button>
             )}
-            
+
             {!isHost && onJoin && !isJoined && (
               <Button
                 onClick={() => onJoin(meetup.id)}
                 disabled={isFull || loading}
-                className="text-sm px-6 h-10 font-medium rounded-lg"
+                className="h-10 rounded-lg font-medium"
               >
                 {loading ? "Joining..." : isFull ? "Full" : "Join"}
               </Button>
             )}
-            
+
             {!isHost && onLeave && isJoined && (
               <Button
                 variant="outline"
                 onClick={() => onLeave(meetup.id)}
                 disabled={loading}
-                className="text-sm px-6 h-10 bg-rose-100 text-rose-700 hover:bg-rose-200 border border-rose-300 font-medium rounded-lg"
+                className="h-10 rounded-lg border-rose-300 bg-rose-100 font-medium text-rose-700 hover:bg-rose-200"
               >
                 {loading ? "Leaving..." : "Leave"}
               </Button>
             )}
           </div>
-
-          {isHost && (
-            <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full whitespace-nowrap ml-2">
-              Host
-            </span>
-          )}
         </div>
       </Card>
     )
@@ -133,83 +141,94 @@ export function MeetupCard({
   // Grid view (vertical layout)
   return (
     <Card
-      className="meetup-card-vertical bg-white border-2 border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-200 overflow-hidden"
+      className="meetup-card-vertical group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-0 shadow-[0_16px_56px_-32px_rgba(15,23,42,0.45)] transition-all duration-200 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-[0_24px_70px_-32px_rgba(6,95,70,0.5)]"
     >
-      <div className="p-6">
-        {/* Header with Sport Icon and Title */}
-        <div className="flex items-start gap-3 mb-4">
-          <div className="text-4xl">{meetup.sportIcon || "⚽"}</div>
-          <div className="flex-1">
-            <h3 className="font-bold text-lg text-foreground leading-tight mb-1">
+      <div className="flex h-full flex-col p-5">
+        <div className="mb-4 flex items-start gap-3">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-2xl">
+            {meetup.sportIcon || "⚽"}
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="mb-1 text-lg font-bold leading-tight text-slate-900">
               {meetup.title}
             </h3>
-            <p className="text-sm text-gray-500">{getSportName(meetup.sport)}</p>
+            <p className="text-sm text-slate-500">{getSportName(meetup.sport)}</p>
           </div>
+        </div>
+
+        <div className="mb-5 space-y-2.5">
+          <div className="flex items-center gap-2 text-sm text-slate-700">
+            <Calendar className="h-4 w-4 shrink-0 text-emerald-600" />
+            <span>{formatDate(meetup.date)}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-slate-700">
+            <Clock className="h-4 w-4 shrink-0 text-emerald-600" />
+            <span>{formatTime(meetup.time)}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-slate-700">
+            <MapPin className="h-4 w-4 shrink-0 text-emerald-600" />
+            <span className="truncate">{meetup.location}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-slate-700">
+            <Users className="h-4 w-4 shrink-0 text-emerald-600" />
+            <span>
+              {meetup.currentParticipants}/{meetup.maxParticipants} joined
+            </span>
+          </div>
+        </div>
+
+        <div className="mb-5 flex flex-wrap items-center gap-2">
+          <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+            {skillLabel}
+          </span>
+          <span
+            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+              isFull
+                ? "bg-rose-100 text-rose-700"
+                : "bg-teal-100 text-teal-700"
+            }`}
+          >
+            {isFull
+              ? "Meetup Full"
+              : `${spotsLeft} ${spotsLeft === 1 ? "spot" : "spots"} left`}
+          </span>
           {isHost && (
-            <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
+            <span className="inline-flex rounded-full border border-emerald-300 bg-emerald-600 px-3 py-1 text-xs font-semibold text-white">
               Host
             </span>
           )}
         </div>
 
-        {/* Meetup Details */}
-        <div className="space-y-2.5 mb-4">
-          <div className="flex items-center gap-2 text-sm text-gray-700">
-            <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0" />
-            <span>{formatDate(meetup.date)}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-gray-700">
-            <Clock className="h-4 w-4 text-gray-400 flex-shrink-0" />
-            <span>{meetup.time}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-gray-700">
-            <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
-            <span>{meetup.location}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-gray-700">
-            <Users className="h-4 w-4 text-gray-400 flex-shrink-0" />
-            <span>{meetup.currentParticipants}/{meetup.maxParticipants} spots available</span>
-          </div>
-        </div>
-
-        {/* Skill Level Badge */}
-        <div className="mb-6">
-          <span className="inline-block bg-gray-100 text-gray-700 text-sm px-4 py-2 rounded-lg capitalize font-medium">
-            {meetup.skillLevel === "all" ? "All Levels" : meetup.skillLevel}
-          </span>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-3">
+        <div className="mt-auto flex gap-3 pt-2">
           {onView && (
             <Button
               variant="outline"
               size="lg"
               onClick={() => onView(meetup.id)}
-              className="flex-1 text-sm h-12 border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-medium rounded-xl"
+              className="h-11 flex-1 rounded-xl border-slate-300 text-sm font-medium text-slate-700 hover:bg-slate-50"
             >
               View
             </Button>
           )}
-          
+
           {!isHost && onJoin && !isJoined && (
             <Button
               size="lg"
               onClick={() => onJoin(meetup.id)}
               disabled={isFull || loading}
-              className="flex-1 text-sm h-12 font-medium rounded-xl"
+              className="h-11 flex-1 rounded-xl text-sm font-medium"
             >
               {loading ? "Joining..." : isFull ? "Full" : "Join"}
             </Button>
           )}
-          
+
           {!isHost && onLeave && isJoined && (
             <Button
               variant="outline"
               size="lg"
               onClick={() => onLeave(meetup.id)}
               disabled={loading}
-              className="flex-1 text-sm h-12 bg-rose-100 text-rose-700 hover:bg-rose-200 border border-rose-300 font-medium rounded-xl"
+              className="h-11 flex-1 rounded-xl border-rose-300 bg-rose-100 text-sm font-medium text-rose-700 hover:bg-rose-200"
             >
               {loading ? "Leaving..." : "Leave"}
             </Button>
@@ -219,4 +238,3 @@ export function MeetupCard({
     </Card>
   )
 }
-
