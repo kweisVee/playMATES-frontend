@@ -86,7 +86,11 @@ export default function Dashboard() {
     <ProtectedRoute>
       <div className="min-h-screen bg-gradient-to-b from-primary/10 to-white">
         {/* Welcome Section */}
-        <section className="bg-gradient-to-r from-primary/20 to-primary/10 py-12">
+        <section
+          id="dashboard-welcome"
+          data-section="welcome"
+          className="dashboard-welcome bg-gradient-to-r from-primary/20 to-primary/10 py-12"
+        >
           <div className="container mx-auto px-4">
             <h1 className="text-4xl font-bold mb-2">
               Welcome back, {user?.firstName}! 👋
@@ -98,7 +102,11 @@ export default function Dashboard() {
         </section>
 
         {/* Quick Stats */}
-        <section className="container mx-auto px-4 -mt-8">
+        <section
+          id="dashboard-quick-stats"
+          data-section="quick-stats"
+          className="container dashboard-quick-stats mx-auto px-4 -mt-8"
+        >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-green-200">
               <div className="flex items-center justify-between">
@@ -139,7 +147,11 @@ export default function Dashboard() {
         </section>
 
         {/* Quick Actions */}
-        <section className="container mx-auto px-4 mb-12">
+        <section
+          id="dashboard-quick-actions"
+          data-section="quick-actions"
+          className="container dashboard-quick-actions mx-auto px-4 mb-12"
+        >
           <h2 className="text-2xl font-bold mb-4">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link href="/create-meetup">
@@ -187,7 +199,11 @@ export default function Dashboard() {
         </section>
 
         {/* Upcoming Meetups */}
-        <section className="meetups-container mx-auto px-4 mb-12">
+        <section
+          id="dashboard-upcoming-meetups"
+          data-section="upcoming-meetups"
+          className="container dashboard-upcoming-meetups mx-auto px-4 mb-12"
+        >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Your Upcoming Meetups</h2>
             <Link href="/my-meetups">
@@ -233,7 +249,11 @@ export default function Dashboard() {
         </section>
 
         {/* Recommended Meetups */}
-        <section className="container mx-auto px-4 pb-12">
+        <section
+          id="dashboard-recommended-meetups"
+          data-section="recommended-meetups"
+          className="container dashboard-recommended-meetups mx-auto px-4 pb-12"
+        >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Recommended for You</h2>
             <Link href="/browse-all-meetups">
@@ -268,4 +288,3 @@ export default function Dashboard() {
     </ProtectedRoute>
   )
 }
-
