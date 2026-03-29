@@ -43,6 +43,7 @@ export default function MeetupDetailPage() {
   const { user } = useAuthContext()
   const [meetup, setMeetup] = useState<Meetup | null>(null)
   const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [editLoading, setEditLoading] = useState(false)
@@ -70,6 +71,7 @@ export default function MeetupDetailPage() {
   const fetchMeetup = async () => {
     try {
       setLoading(true)
+      setFetchError(false)
       const data = await MeetupService.getMeetupById(meetupId)
       setMeetup(data)
       setEditForm({
@@ -86,8 +88,7 @@ export default function MeetupDetailPage() {
       })
     } catch (error) {
       console.error("Failed to fetch meetup:", error)
-      alert("Failed to load meetup details")
-      router.push("/browse-all-meetups")
+      setFetchError(true)
     } finally {
       setLoading(false)
     }
@@ -246,15 +247,26 @@ export default function MeetupDetailPage() {
     return (
       <ProtectedRoute>
         <div className="flex items-center justify-center min-h-screen">
-          <Card className="p-8 text-center">
+          <Card className="p-8 text-center max-w-md">
             <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Meetup Not Found</h2>
-            <p className="text-muted-foreground mb-4">
-              The meetup you&apos;re looking for doesn&apos;t exist or has been removed.
+            <h2 className="text-2xl font-bold mb-2">
+              {fetchError ? "Failed to Load Meetup" : "Meetup Not Found"}
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              {fetchError
+                ? "Something went wrong loading this meetup. Please try again."
+                : "The meetup you're looking for doesn't exist or has been removed."}
             </p>
-            <Button onClick={() => router.push("/browse")}>
-              Browse Meetups
-            </Button>
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+              {fetchError && (
+                <Button onClick={fetchMeetup} variant="outline">
+                  Try Again
+                </Button>
+              )}
+              <Button onClick={() => router.push("/browse-all-meetups")}>
+                Browse Meetups
+              </Button>
+            </div>
           </Card>
         </div>
       </ProtectedRoute>

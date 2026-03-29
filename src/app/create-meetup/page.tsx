@@ -5,12 +5,20 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog"
 import { useState, useEffect } from "react"
 import { MeetupService, CreateMeetupData } from "@/lib/services/meetup"
 import { useRouter } from "next/navigation"
 import { Sport } from "@/lib/services/sport"
 import { useSports } from "@/hooks/useSports"
 import { useAuthContext } from "@/contexts/AuthContext"
+import { CheckCircle2 } from "lucide-react"
 
 // Icon mapping for sports (fallback when no imageUrl provided)
 const SPORT_ICON_MAP: Record<string, string> = {
@@ -58,6 +66,12 @@ export default function CreateMeetupPage() {
     skillLevel: "all",
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [successModal, setSuccessModal] = useState<{ open: boolean; meetupId: string | null; title: string; sportIcon: string }>({
+    open: false,
+    meetupId: null,
+    title: "",
+    sportIcon: "",
+  })
   // Local state for maxParticipants input to allow free typing
   const [maxParticipantsInput, setMaxParticipantsInput] = useState<string>("2")
   const [zipcode, setZipcode] = useState<string>("")
@@ -151,10 +165,13 @@ export default function CreateMeetupPage() {
       setLoading(true)
       console.log("formData:", formData)
       const response = await MeetupService.createMeetup(formData)
-      
-      // Show success message and redirect
-      alert("Meetup created successfully!")
-      router.push(`/meetup/${response.id}`)
+
+      setSuccessModal({
+        open: true,
+        meetupId: response.meetup.id,
+        title: formData.title,
+        sportIcon: formData.sportIcon || getSportIcon(formData.sport),
+      })
     } catch (error) {
       console.error("Failed to create meetup:", error)
       alert("Failed to create meetup. Please try again.")
@@ -509,6 +526,34 @@ export default function CreateMeetupPage() {
           </form>
         </div>
       </div>
-    </ProtectedRoute>
+        <Dialog open={successModal.open} onOpenChange={() => {}}>
+          <DialogContent className="sm:max-w-md rounded-3xl border-emerald-100 p-0 overflow-hidden" showCloseButton={false}>
+            <div className="bg-gradient-to-br from-emerald-700 via-emerald-800 to-teal-800 px-8 pt-8 pb-6 text-white text-center">
+              <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
+                <CheckCircle2 className="h-9 w-9 text-white" />
+              </div>
+              <DialogTitle className="text-2xl font-black text-white">Meetup Created!</DialogTitle>
+            </div>
+            <div className="px-8 py-6 text-center">
+              <div className="mb-2 text-4xl">{successModal.sportIcon}</div>
+              <p className="text-lg font-semibold text-slate-800">{successModal.title}</p>
+              <DialogDescription className="mt-2 text-slate-500">
+                Your meetup is live and ready for players to join.
+              </DialogDescription>
+            </div>
+            <DialogFooter className="px-8 pb-8">
+              <Button
+                className="w-full h-11 bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-[0_16px_32px_-16px_rgba(13,148,136,0.85)] hover:from-emerald-700 hover:to-teal-700"
+                onClick={() => {
+                  setSuccessModal(prev => ({ ...prev, open: false }))
+                  router.push(`/meetup/${successModal.meetupId}`)
+                }}
+              >
+                View Meetup
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </ProtectedRoute>
   )
 }
