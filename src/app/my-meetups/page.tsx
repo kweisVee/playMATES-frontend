@@ -71,22 +71,22 @@ export default function MyMeetupsPage() {
       {Array.from({ length: 3 }).map((_, index) => (
         <Card
           key={index}
-          className="rounded-2xl border-slate-200/80 bg-white p-0 shadow-[0_16px_56px_-32px_rgba(15,23,42,0.35)]"
+          className="rounded-2xl border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-800/90 p-0 shadow-[0_16px_56px_-32px_rgba(15,23,42,0.35)]"
         >
           <div className="animate-pulse space-y-4 p-5">
             <div className="flex items-start gap-3">
-              <div className="h-12 w-12 rounded-xl bg-slate-200" />
+              <div className="h-12 w-12 rounded-xl bg-slate-200 dark:bg-slate-700" />
               <div className="min-w-0 flex-1 space-y-2">
-                <div className="h-4 w-3/4 rounded bg-slate-200" />
-                <div className="h-3 w-1/3 rounded bg-slate-200" />
+                <div className="h-4 w-3/4 rounded bg-slate-200 dark:bg-slate-700" />
+                <div className="h-3 w-1/3 rounded bg-slate-200 dark:bg-slate-700" />
               </div>
             </div>
             <div className="space-y-2">
-              <div className="h-3 w-2/3 rounded bg-slate-200" />
-              <div className="h-3 w-1/2 rounded bg-slate-200" />
-              <div className="h-3 w-4/5 rounded bg-slate-200" />
+              <div className="h-3 w-2/3 rounded bg-slate-200 dark:bg-slate-700" />
+              <div className="h-3 w-1/2 rounded bg-slate-200 dark:bg-slate-700" />
+              <div className="h-3 w-4/5 rounded bg-slate-200 dark:bg-slate-700" />
             </div>
-            <div className="h-10 w-full rounded-xl bg-slate-200" />
+            <div className="h-10 w-full rounded-xl bg-slate-200 dark:bg-slate-700" />
           </div>
         </Card>
       ))}
@@ -95,7 +95,7 @@ export default function MyMeetupsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-emerald-50 via-white to-teal-50/60">
+      <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-emerald-50 via-white to-teal-50/60 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
         <div className="pointer-events-none absolute -left-24 top-16 h-80 w-80 rounded-full bg-emerald-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -right-24 top-40 h-72 w-72 rounded-full bg-cyan-300/20 blur-3xl" />
 
@@ -123,12 +123,12 @@ export default function MyMeetupsPage() {
         </section>
 
         <div className="container mx-auto px-4 py-8">
-          <Card className="mb-8 rounded-3xl border-emerald-100/80 bg-white/80 p-4 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.45)] backdrop-blur-sm md:p-5">
+          <Card className="mb-8 rounded-3xl border-emerald-100/80 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80 p-4 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.45)] backdrop-blur-sm md:p-5">
             <div className="flex flex-wrap gap-2">
               <Button
                 variant={activeTab === "hosting" ? "default" : "outline"}
                 onClick={() => setActiveTab("hosting")}
-                className={activeTab === "hosting" ? "bg-emerald-600 hover:bg-emerald-700" : "border-slate-300 text-slate-700 hover:bg-slate-50"}
+                className={activeTab === "hosting" ? "bg-emerald-600 hover:bg-emerald-700" : "border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"}
               >
                 Hosting ({hostingMeetups.length})
               </Button>
@@ -143,7 +143,7 @@ export default function MyMeetupsPage() {
           </Card>
 
           {loading ? (
-            <div className="rounded-3xl border border-emerald-100/80 bg-white/75 p-4 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.45)] backdrop-blur-sm md:p-6">
+            <div className="rounded-3xl border border-emerald-100/80 dark:border-slate-700/50 bg-white/75 dark:bg-slate-900/80 p-4 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.45)] backdrop-blur-sm md:p-6">
               {renderCardSkeletons()}
             </div>
           ) : (
@@ -152,12 +152,12 @@ export default function MyMeetupsPage() {
               {upcomingMeetups.length > 0 && (
                 <section className="mb-12">
                   <div className="mb-4">
-                    <h2 className="text-2xl font-bold text-slate-900">Upcoming</h2>
-                    <p className="text-sm text-slate-500">
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Upcoming</h2>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
                       Your next {activeTabLabel.toLowerCase()} events.
                     </p>
                   </div>
-                  <div className="rounded-3xl border border-emerald-100/80 bg-white/75 p-4 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.45)] backdrop-blur-sm md:p-6">
+                  <div className="rounded-3xl border border-emerald-100/80 dark:border-slate-700/50 bg-white/75 dark:bg-slate-900/80 p-4 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.45)] backdrop-blur-sm md:p-6">
                     <div className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 xl:grid-cols-3">
                       {upcomingMeetups.map((meetup) => (
                         <MeetupCard
@@ -180,10 +180,10 @@ export default function MyMeetupsPage() {
               {pastMeetups.length > 0 && (
                 <section className="mb-12">
                   <div className="mb-4">
-                    <h2 className="text-2xl font-bold text-slate-900">Past</h2>
-                    <p className="text-sm text-slate-500">Completed or past-date meetups.</p>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Past</h2>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">Completed or past-date meetups.</p>
                   </div>
-                  <div className="rounded-3xl border border-emerald-100/80 bg-white/75 p-4 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.45)] backdrop-blur-sm md:p-6">
+                  <div className="rounded-3xl border border-emerald-100/80 dark:border-slate-700/50 bg-white/75 dark:bg-slate-900/80 p-4 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.45)] backdrop-blur-sm md:p-6">
                     <div className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 xl:grid-cols-3">
                       {pastMeetups.map((meetup) => (
                         <MeetupCard
@@ -202,10 +202,10 @@ export default function MyMeetupsPage() {
               {cancelledMeetups.length > 0 && (
                 <section className="mb-12">
                   <div className="mb-4">
-                    <h2 className="text-2xl font-bold text-slate-900">Cancelled</h2>
-                    <p className="text-sm text-slate-500">Cancelled meetups for reference.</p>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Cancelled</h2>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">Cancelled meetups for reference.</p>
                   </div>
-                  <div className="rounded-3xl border border-emerald-100/80 bg-white/75 p-4 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.45)] backdrop-blur-sm md:p-6">
+                  <div className="rounded-3xl border border-emerald-100/80 dark:border-slate-700/50 bg-white/75 dark:bg-slate-900/80 p-4 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.45)] backdrop-blur-sm md:p-6">
                     <div className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 xl:grid-cols-3">
                       {cancelledMeetups.map((meetup) => (
                         <MeetupCard
@@ -222,9 +222,9 @@ export default function MyMeetupsPage() {
 
               {/* Empty State */}
               {activeMeetups.length === 0 && (
-                <Card className="rounded-2xl border-slate-200/80 p-12 text-center shadow-[0_16px_56px_-32px_rgba(15,23,42,0.35)]">
+                <Card className="rounded-2xl border-slate-200/80 dark:border-slate-700/50 p-12 text-center shadow-[0_16px_56px_-32px_rgba(15,23,42,0.35)]">
                   <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-slate-900 mb-2">
+                  <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
                     {activeTab === "hosting"
                       ? "No meetups hosted yet"
                       : "No meetups joined yet"}

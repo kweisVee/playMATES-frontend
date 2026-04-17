@@ -200,7 +200,7 @@ export default function BrowsePage() {
 
   return (
     <ProtectedRoute>
-      <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-emerald-50 via-white to-teal-50/60">
+      <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-emerald-50 via-white to-teal-50/60 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
         <div className="pointer-events-none absolute -left-24 top-16 h-80 w-80 rounded-full bg-emerald-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -right-24 top-40 h-72 w-72 rounded-full bg-cyan-300/20 blur-3xl" />
 
@@ -222,15 +222,18 @@ export default function BrowsePage() {
         <div className="container mx-auto px-4 py-8">
           <Card className="mb-8 rounded-3xl border-emerald-100/80 bg-white/80 p-5 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.45)] backdrop-blur-sm md:p-6">
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px_220px_auto]">
-              <div className="relative lg:col-span-1">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-600" />
-                <Input
-                  placeholder="Search by title, sport, or location..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="h-11 border-emerald-200 pl-10 text-slate-700 placeholder:text-slate-400 focus-visible:ring-emerald-500"
-                />
+              <div className="flex flex-col lg:col-span-1">
+                <label className="mb-2 block text-sm font-semibold text-slate-700">Search</label>
+                <div className="relative">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-600" />
+                  <Input
+                    placeholder="Search by title, sport, or location..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                    className="h-11 border-emerald-200 pl-10 text-slate-700 placeholder:text-slate-400 focus-visible:ring-emerald-500"
+                  />
+                </div>
               </div>
 
               <div>

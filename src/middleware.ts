@@ -9,6 +9,7 @@ const protectedRoutes = [
   "/profile",
   "/my-meetups",
   "/meetup",
+  "/command",
 ]
 
 export function middleware(request: NextRequest) {

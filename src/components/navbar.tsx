@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { UserCircle } from "lucide-react"
 import { useState } from "react"
 import { AuthModal } from "@/components/auth-modal"
@@ -17,7 +18,8 @@ export function Navbar() {
 
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin")
-  
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+
   const openSignIn = () => {
     setAuthMode("signin")
     setShowAuthModal(true)
@@ -28,7 +30,12 @@ export function Navbar() {
     setShowAuthModal(true)
   }
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
+    setShowLogoutConfirm(true)
+  }
+
+  const confirmLogout = async () => {
+    setShowLogoutConfirm(false)
     await signOut()
   }
 
@@ -54,7 +61,7 @@ export function Navbar() {
           </span>
         </Link>
         <nav className="hidden md:flex items-center gap-6">
-          {isAuthenticated ? (
+          {isLoading ? null : isAuthenticated ? (
             <>
               <Link href="/dashboard" className={navLinkClass(pathname === "/dashboard")}>
                 Dashboard
@@ -73,6 +80,11 @@ export function Navbar() {
               <Link href="/create-meetup" className={navLinkClass(pathname.startsWith("/create-meetup"))}>
                 Create Meetup
               </Link>
+              {user?.role === "ADMIN" && (
+                <Link href="/command" className={navLinkClass(pathname.startsWith("/command"))}>
+                  Command
+                </Link>
+              )}
             </>
           ) : (
             <>
@@ -130,6 +142,33 @@ export function Navbar() {
         mode={authMode}
         onToggleMode={() => setAuthMode(authMode === "signin" ? "signup" : "signin")}
       />
+
+      {/* Logout Confirmation Dialog */}
+      <Dialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
+        <DialogContent className="sm:max-w-sm rounded-2xl">
+          <DialogTitle className="text-lg font-bold text-slate-900 dark:text-slate-100">
+            Log Out
+          </DialogTitle>
+          <DialogDescription className="text-slate-500 dark:text-slate-400">
+            Are you sure you want to log out?
+          </DialogDescription>
+          <DialogFooter className="flex gap-2 sm:flex-row">
+            <Button
+              variant="outline"
+              onClick={() => setShowLogoutConfirm(false)}
+              className="flex-1 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={confirmLogout}
+              className="flex-1 bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white"
+            >
+              Log Out
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </header>
   )
 }

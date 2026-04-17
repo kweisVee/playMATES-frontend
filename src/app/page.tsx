@@ -100,7 +100,7 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section with vibrant gradient background */}
-      <section className="bg-gradient-to-b from-primary/20 to-white py-16 md:py-24">
+      <section className="bg-gradient-to-b from-primary/20 to-white dark:from-emerald-950 dark:to-slate-950 py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
             Find Your Perfect <span className="text-primary">PlayMate</span>
@@ -120,12 +120,12 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-slate-900">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-dark-light">Why Choose PlayMate?</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-dark-light dark:text-slate-100">Why Choose PlayMate?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-primary/15 rounded-full flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-primary/15 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mb-4">
                 <MapPin className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Local Meetups</h3>
@@ -134,7 +134,7 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-primary/15 rounded-full flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-primary/15 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mb-4">
                 <Calendar className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Flexible Scheduling</h3>
@@ -143,7 +143,7 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-primary/15 rounded-full flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-primary/15 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mb-4">
                 <Users className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Community Focused</h3>
@@ -156,7 +156,7 @@ export default function Home() {
       </section>
 
       {/* Sports Section with updated subtle background */}
-      <section id="sports" className="py-16 bg-gradient-to-b from-white to-primary/5">
+      <section id="sports" className="py-16 bg-gradient-to-b from-white to-primary/5 dark:from-slate-900 dark:to-emerald-950/30">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-4">Choose Your Sport</h2>
           <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
