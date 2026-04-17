@@ -47,7 +47,7 @@ export default function CreateMeetupPage() {
   const router = useRouter()
   const { user } = useAuthContext()
   const [loading, setLoading] = useState(false)
-  
+
   // React Query hook - automatically handles fetching, caching, and loading states!
   const { data: sports = [], isLoading: loadingSports, error: sportsError } = useSports()
   
@@ -182,7 +182,7 @@ export default function CreateMeetupPage() {
 
   return (
     <ProtectedRoute>
-      <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-emerald-50 via-white to-teal-50/60">
+      <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-emerald-50 via-white to-teal-50/60 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
         <div className="pointer-events-none absolute -left-24 top-16 h-80 w-80 rounded-full bg-emerald-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -right-24 top-40 h-72 w-72 rounded-full bg-cyan-300/20 blur-3xl" />
 
@@ -203,11 +203,11 @@ export default function CreateMeetupPage() {
 
         <div className="container mx-auto max-w-3xl px-4 py-8 pb-12">
           <form onSubmit={handleSubmit}>
-            <Card className="create-meetup-card rounded-3xl border-emerald-100/80 bg-white/85 p-0 shadow-[0_26px_80px_-42px_rgba(15,23,42,0.45)] backdrop-blur-sm">
+            <Card className="create-meetup-card rounded-3xl border-emerald-100/80 dark:border-slate-700/50 bg-white/85 dark:bg-slate-900/90 p-0 shadow-[0_26px_80px_-42px_rgba(15,23,42,0.45)] backdrop-blur-sm">
               <div className="space-y-6 p-5 md:p-8">
-                <section className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
-                  <h2 className="text-xl font-bold text-slate-900">Choose Sport</h2>
-                  <p className="mt-1 text-sm text-slate-500">
+                <section className="rounded-2xl border border-emerald-100 dark:border-emerald-900/50 bg-white dark:bg-slate-800/60 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Choose Sport</h2>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                     Pick the sport first so attendees quickly understand the meetup.
                   </p>
 
@@ -231,8 +231,8 @@ export default function CreateMeetupPage() {
                             onClick={() => handleSportSelect(sport)}
                             className={`rounded-xl border-2 p-4 text-left transition-all ${
                               isSelected
-                                ? "border-emerald-500 bg-gradient-to-br from-emerald-50 to-teal-50 shadow-[0_12px_28px_-16px_rgba(5,150,105,0.8)]"
-                                : "border-slate-200 bg-slate-50/60 hover:border-emerald-300 hover:bg-emerald-50/70"
+                                ? "border-emerald-500 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/40 dark:to-teal-900/40 shadow-[0_12px_28px_-16px_rgba(5,150,105,0.8)]"
+                                : "border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-700/30 hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-emerald-50/70 dark:hover:bg-emerald-900/30"
                             }`}
                           >
                             {sport.imageUrl ? (
@@ -244,7 +244,7 @@ export default function CreateMeetupPage() {
                             ) : (
                               <div className="mb-2 text-3xl">{icon}</div>
                             )}
-                            <div className={`text-sm font-semibold ${isSelected ? "text-emerald-700" : "text-slate-700"}`}>
+                            <div className={`text-sm font-semibold ${isSelected ? "text-emerald-700 dark:text-emerald-300" : "text-slate-700 dark:text-slate-300"}`}>
                               {sport.name}
                             </div>
                           </button>
@@ -257,15 +257,15 @@ export default function CreateMeetupPage() {
                   )}
                 </section>
 
-                <section className="rounded-2xl border border-emerald-100 bg-white p-5">
-                  <h2 className="text-xl font-bold text-slate-900">Meetup Details</h2>
-                  <p className="mt-1 text-sm text-slate-500">
+                <section className="rounded-2xl border border-emerald-100 dark:border-emerald-900/50 bg-white dark:bg-slate-800/60 p-5">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Meetup Details</h2>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                     Give your meetup a clear title and description.
                   </p>
 
                   <div className="mt-4 space-y-5">
                     <div>
-                      <Label htmlFor="title" className="text-slate-700">Meetup Title *</Label>
+                      <Label htmlFor="title" className="text-slate-700 dark:text-slate-300">Meetup Title *</Label>
                       <Input
                         id="title"
                         placeholder="e.g., Weekend Tennis Match at Central Park"
@@ -281,7 +281,7 @@ export default function CreateMeetupPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="description" className="text-slate-700">Description</Label>
+                      <Label htmlFor="description" className="text-slate-700 dark:text-slate-300">Description</Label>
                       <textarea
                         id="description"
                         placeholder="Tell others about your meetup..."
@@ -295,15 +295,15 @@ export default function CreateMeetupPage() {
                   </div>
                 </section>
 
-                <section className="rounded-2xl border border-emerald-100 bg-white p-5">
-                  <h2 className="text-xl font-bold text-slate-900">Location</h2>
-                  <p className="mt-1 text-sm text-slate-500">
+                <section className="rounded-2xl border border-emerald-100 dark:border-emerald-900/50 bg-white dark:bg-slate-800/60 p-5">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Location</h2>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                     Enter where the meetup will happen.
                   </p>
 
                   <div className="mt-4 space-y-5">
                     <div>
-                      <Label htmlFor="zipcode" className="text-slate-700">Zipcode</Label>
+                      <Label htmlFor="zipcode" className="text-slate-700 dark:text-slate-300">Zipcode</Label>
                       <Input
                         id="zipcode"
                         type="text"
@@ -327,7 +327,7 @@ export default function CreateMeetupPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="location" className="text-slate-700">Location *</Label>
+                      <Label htmlFor="location" className="text-slate-700 dark:text-slate-300">Location *</Label>
                       <Input
                         id="location"
                         placeholder="e.g., Central Park Tennis Courts"
@@ -344,7 +344,7 @@ export default function CreateMeetupPage() {
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       <div>
-                        <Label htmlFor="city" className="text-slate-700">City</Label>
+                        <Label htmlFor="city" className="text-slate-700 dark:text-slate-300">City</Label>
                         <Input
                           id="city"
                           placeholder="New York"
@@ -356,7 +356,7 @@ export default function CreateMeetupPage() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="state" className="text-slate-700">State</Label>
+                        <Label htmlFor="state" className="text-slate-700 dark:text-slate-300">State</Label>
                         <Input
                           id="state"
                           placeholder="NY"
@@ -371,16 +371,16 @@ export default function CreateMeetupPage() {
                   </div>
                 </section>
 
-                <section className="rounded-2xl border border-emerald-100 bg-white p-5">
-                  <h2 className="text-xl font-bold text-slate-900">Schedule & Capacity</h2>
-                  <p className="mt-1 text-sm text-slate-500">
+                <section className="rounded-2xl border border-emerald-100 dark:border-emerald-900/50 bg-white dark:bg-slate-800/60 p-5">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Schedule & Capacity</h2>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                     Set the event date, time, and participant limits.
                   </p>
 
                   <div className="mt-4 space-y-5">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       <div>
-                        <Label htmlFor="date" className="text-slate-700">Date *</Label>
+                        <Label htmlFor="date" className="text-slate-700 dark:text-slate-300">Date *</Label>
                         <Input
                           id="date"
                           type="date"
@@ -396,7 +396,7 @@ export default function CreateMeetupPage() {
                         )}
                       </div>
                       <div>
-                        <Label htmlFor="time" className="text-slate-700">Time *</Label>
+                        <Label htmlFor="time" className="text-slate-700 dark:text-slate-300">Time *</Label>
                         <Input
                           id="time"
                           type="time"
@@ -414,7 +414,7 @@ export default function CreateMeetupPage() {
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       <div>
-                        <Label htmlFor="maxParticipants" className="text-slate-700">
+                        <Label htmlFor="maxParticipants" className="text-slate-700 dark:text-slate-300">
                           Max Participants *
                         </Label>
                         <Input
@@ -464,7 +464,7 @@ export default function CreateMeetupPage() {
                       </div>
 
                       <div>
-                        <Label htmlFor="skillLevel" className="text-slate-700">Skill Level *</Label>
+                        <Label htmlFor="skillLevel" className="text-slate-700 dark:text-slate-300">Skill Level *</Label>
                         <div className="relative mt-2">
                           <select
                             id="skillLevel"
@@ -475,7 +475,7 @@ export default function CreateMeetupPage() {
                                 skillLevel: e.target.value as CreateMeetupData["skillLevel"],
                               })
                             }
-                            className="h-11 w-full appearance-none rounded-md border border-emerald-200 bg-background px-3 pr-10 text-sm text-slate-700 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                            className="h-11 w-full appearance-none rounded-md border border-emerald-200 dark:border-slate-700 bg-background dark:bg-slate-800 px-3 pr-10 text-sm text-slate-700 dark:text-slate-100 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                           >
                             <option value="all">All Levels</option>
                             <option value="beginner">Beginner</option>
@@ -516,7 +516,7 @@ export default function CreateMeetupPage() {
                     variant="outline"
                     onClick={() => router.back()}
                     disabled={loading}
-                    className="h-11 border-slate-300 text-slate-700 hover:bg-slate-50 sm:w-36"
+                    className="h-11 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 sm:w-36"
                   >
                     Cancel
                   </Button>
@@ -536,8 +536,8 @@ export default function CreateMeetupPage() {
             </div>
             <div className="px-8 py-6 text-center">
               <div className="mb-2 text-4xl">{successModal.sportIcon}</div>
-              <p className="text-lg font-semibold text-slate-800">{successModal.title}</p>
-              <DialogDescription className="mt-2 text-slate-500">
+              <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">{successModal.title}</p>
+              <DialogDescription className="mt-2 text-slate-500 dark:text-slate-400">
                 Your meetup is live and ready for players to join.
               </DialogDescription>
             </div>

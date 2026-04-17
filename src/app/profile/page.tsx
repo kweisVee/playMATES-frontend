@@ -79,9 +79,9 @@ export default function ProfilePage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-b from-primary/10 to-white">
+      <div className="min-h-screen bg-gradient-to-b from-primary/10 to-white dark:from-emerald-950 dark:to-slate-900">
         {/* Header */}
-        <section className="bg-gradient-to-r from-primary/20 to-primary/10 py-12">
+        <section className="bg-gradient-to-r from-primary/20 to-primary/10 dark:from-emerald-950 dark:to-emerald-900/50 py-12">
           <div className="container mx-auto px-4">
             <h1 className="text-4xl font-bold mb-2">Your Profile</h1>
             <p className="text-lg text-muted-foreground">
@@ -93,8 +93,8 @@ export default function ProfilePage() {
         <div className="container mx-auto px-4 py-8 max-w-3xl">
           <Card className="p-8">
             {/* Profile Picture Section */}
-            <div className="flex flex-col items-center mb-8 pb-8 border-b">
-              <div className="w-32 h-32 bg-primary/20 rounded-full flex items-center justify-center mb-4">
+            <div className="flex flex-col items-center mb-8 pb-8 border-b dark:border-slate-700">
+              <div className="w-32 h-32 bg-primary/20 dark:bg-emerald-900/40 rounded-full flex items-center justify-center mb-4">
                 <UserCircle className="w-24 h-24 text-primary" />
               </div>
               <div className="flex items-center gap-2 mb-1">
@@ -102,7 +102,7 @@ export default function ProfilePage() {
                   {user?.firstName} {user?.lastName}
                 </h2>
                 {user?.role === 'ADMIN' && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-amber-100 text-amber-800 border border-amber-300 rounded-full text-sm font-semibold">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700/50 rounded-full text-sm font-semibold">
                     <Shield className="w-4 h-4" />
                     ADMIN
                   </span>
@@ -258,10 +258,10 @@ export default function ProfilePage() {
               )}
 
               {/* Account Stats */}
-              <div className="pt-6 border-t">
+              <div className="pt-6 border-t dark:border-slate-700">
                 <h3 className="text-lg font-semibold mb-4">Account Stats</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Card className="p-4 bg-green-50 border-green-200">
+                  <Card className="p-4 bg-green-50 dark:bg-green-950/40 border-green-200 dark:border-green-900/50">
                     <p className="text-sm text-muted-foreground mb-1">
                       Member Since
                     </p>
@@ -269,13 +269,13 @@ export default function ProfilePage() {
                       {new Date().getFullYear()}
                     </p>
                   </Card>
-                  <Card className="p-4 bg-blue-50 border-blue-200">
+                  <Card className="p-4 bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-900/50">
                     <p className="text-sm text-muted-foreground mb-1">
                       Meetups Joined
                     </p>
                     <p className="text-xl font-bold">0</p>
                   </Card>
-                  <Card className="p-4 bg-purple-50 border-purple-200">
+                  <Card className="p-4 bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-900/50">
                     <p className="text-sm text-muted-foreground mb-1">
                       Meetups Hosted
                     </p>

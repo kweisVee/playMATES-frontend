@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export function Footer() {
   return (
-    <footer className="border-t py-8 bg-gray-50">
+    <footer className="border-t py-8 bg-gray-50 dark:bg-slate-950 dark:border-slate-800">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
@@ -84,7 +84,7 @@ export function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-8 pt-6 border-t text-center text-sm text-muted-foreground">
+        <div className="mt-8 pt-6 border-t dark:border-slate-800 text-center text-sm text-muted-foreground">
           &copy; {new Date().getFullYear()} PlayMate. All rights reserved.
         </div>
       </div>

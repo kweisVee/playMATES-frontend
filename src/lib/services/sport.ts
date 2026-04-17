@@ -16,7 +16,30 @@ export interface Sport {
     }
 }
 
+export interface CreateSportData {
+  name: string
+  definition?: string
+  category?: string
+  imageUrl?: string
+}
+
 export class SportService {
+  static async createSport(data: CreateSportData): Promise<Sport> {
+    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.SPORT.CREATE}`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      credentials: "include",
+      body: JSON.stringify(data),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ message: "Failed to create sport" }))
+      throw new Error(errorData.message || "Failed to create sport")
+    }
+
+    return response.json()
+  }
+
   static async getAllSports(): Promise<Sport[]> {
     console.log("sport.ts: SportService: Get All Sports starting...")
 
